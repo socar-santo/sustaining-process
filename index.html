@@ -3,32 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>서스테이닝 개발 프로세스 가이드</title>
+    <title>주차 제품 서스테이닝 개발 프로세스 가이드</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #2563eb;
-            --primary-light: #3b82f6;
-            --secondary: #64748b;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --bg: #f8fafc;
-            --card-bg: #ffffff;
-            --text: #1e293b;
-            --text-light: #64748b;
-            --border: #e2e8f0;
+            --primary: #7c3aed;
+            --primary-light: #a78bfa;
+            --secondary: #94a3b8;
+            --success: #34d399;
+            --warning: #fbbf24;
+            --danger: #f87171;
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text: #f1f5f9;
+            --text-light: #94a3b8;
+            --border: #334155;
 
-            /* 단계별 색상 */
-            --step-register: #8b5cf6;
-            --step-review: #3b82f6;
-            --step-plan: #06b6d4;
-            --step-develop: #10b981;
-            --step-test: #f59e0b;
-            --step-deploy: #ef4444;
-            --step-done: #6b7280;
+            /* 우주 테마 단계별 색상 */
+            --step-register: #c084fc;
+            --step-review: #60a5fa;
+            --step-plan: #22d3ee;
+            --step-develop: #4ade80;
+            --step-test: #facc15;
+            --step-deploy: #fb923c;
+            --step-done: #94a3b8;
         }
 
         * {
@@ -44,31 +44,85 @@
             line-height: 1.6;
         }
 
-        /* Header */
+        /* Header - Space Theme */
         .header {
-            background: linear-gradient(135deg, var(--primary) 0%, #1d4ed8 100%);
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
             color: white;
             padding: 3rem 2rem 2rem;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                radial-gradient(2px 2px at 20px 30px, #fff, transparent),
+                radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), transparent),
+                radial-gradient(1px 1px at 90px 40px, #fff, transparent),
+                radial-gradient(2px 2px at 160px 120px, rgba(255,255,255,0.9), transparent),
+                radial-gradient(1px 1px at 230px 80px, #fff, transparent),
+                radial-gradient(2px 2px at 300px 50px, rgba(255,255,255,0.7), transparent),
+                radial-gradient(1px 1px at 350px 140px, #fff, transparent),
+                radial-gradient(2px 2px at 420px 30px, rgba(255,255,255,0.8), transparent),
+                radial-gradient(1px 1px at 500px 100px, #fff, transparent),
+                radial-gradient(2px 2px at 580px 70px, rgba(255,255,255,0.9), transparent),
+                radial-gradient(1px 1px at 650px 130px, #fff, transparent),
+                radial-gradient(2px 2px at 720px 40px, rgba(255,255,255,0.7), transparent),
+                radial-gradient(1px 1px at 800px 90px, #fff, transparent),
+                radial-gradient(2px 2px at 880px 150px, rgba(255,255,255,0.8), transparent),
+                radial-gradient(1px 1px at 950px 60px, #fff, transparent);
+            background-repeat: repeat;
+            background-size: 1000px 200px;
+            animation: twinkle 8s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
         }
 
         .header h1 {
             font-size: 2.5rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
         }
 
         .header p {
             font-size: 1.1rem;
             opacity: 0.9;
             margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
         }
 
-        /* Search Box - NEW */
+        .header .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+            padding: 0.4rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Search Box - Space Theme */
         .search-container {
             max-width: 500px;
             margin: 0 auto;
             position: relative;
+            z-index: 1;
         }
 
         .search-input {
@@ -78,12 +132,19 @@
             border-radius: 2rem;
             font-size: 1rem;
             outline: none;
-            background: rgba(255,255,255,0.95);
-            color: var(--text);
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+            position: relative;
+            z-index: 1;
         }
 
         .search-input::placeholder {
-            color: var(--text-light);
+            color: rgba(255,255,255,0.6);
+        }
+
+        .search-icon {
+            color: rgba(255,255,255,0.6);
         }
 
         .search-icon {
@@ -91,9 +152,9 @@
             left: 1rem;
             top: 50%;
             transform: translateY(-50%);
-            color: var(--text-light);
             width: 18px;
             height: 18px;
+            z-index: 2;
         }
 
         .search-results {
@@ -101,14 +162,15 @@
             top: 100%;
             left: 0;
             right: 0;
-            background: white;
+            background: var(--card-bg);
             border-radius: 0.5rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
             margin-top: 0.5rem;
             max-height: 300px;
             overflow-y: auto;
             display: none;
             z-index: 200;
+            border: 1px solid var(--border);
         }
 
         .search-results.active {
@@ -146,12 +208,12 @@
 
         /* Navigation */
         .nav-container {
-            background: white;
+            background: var(--card-bg);
             border-bottom: 1px solid var(--border);
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
 
         .nav {
@@ -180,26 +242,26 @@
             transform: translateY(-2px);
         }
 
-        .nav-item[data-step="register"] { background: #f3f0ff; color: var(--step-register); }
-        .nav-item[data-step="register"]:hover, .nav-item[data-step="register"].active { background: var(--step-register); color: white; }
+        .nav-item[data-step="register"] { background: rgba(192, 132, 252, 0.15); color: var(--step-register); }
+        .nav-item[data-step="register"]:hover, .nav-item[data-step="register"].active { background: var(--step-register); color: #0f172a; }
 
-        .nav-item[data-step="review"] { background: #eff6ff; color: var(--step-review); }
-        .nav-item[data-step="review"]:hover, .nav-item[data-step="review"].active { background: var(--step-review); color: white; }
+        .nav-item[data-step="review"] { background: rgba(96, 165, 250, 0.15); color: var(--step-review); }
+        .nav-item[data-step="review"]:hover, .nav-item[data-step="review"].active { background: var(--step-review); color: #0f172a; }
 
-        .nav-item[data-step="plan"] { background: #ecfeff; color: var(--step-plan); }
-        .nav-item[data-step="plan"]:hover, .nav-item[data-step="plan"].active { background: var(--step-plan); color: white; }
+        .nav-item[data-step="plan"] { background: rgba(34, 211, 238, 0.15); color: var(--step-plan); }
+        .nav-item[data-step="plan"]:hover, .nav-item[data-step="plan"].active { background: var(--step-plan); color: #0f172a; }
 
-        .nav-item[data-step="develop"] { background: #ecfdf5; color: var(--step-develop); }
-        .nav-item[data-step="develop"]:hover, .nav-item[data-step="develop"].active { background: var(--step-develop); color: white; }
+        .nav-item[data-step="develop"] { background: rgba(74, 222, 128, 0.15); color: var(--step-develop); }
+        .nav-item[data-step="develop"]:hover, .nav-item[data-step="develop"].active { background: var(--step-develop); color: #0f172a; }
 
-        .nav-item[data-step="test"] { background: #fffbeb; color: var(--step-test); }
-        .nav-item[data-step="test"]:hover, .nav-item[data-step="test"].active { background: var(--step-test); color: white; }
+        .nav-item[data-step="test"] { background: rgba(250, 204, 21, 0.15); color: var(--step-test); }
+        .nav-item[data-step="test"]:hover, .nav-item[data-step="test"].active { background: var(--step-test); color: #0f172a; }
 
-        .nav-item[data-step="deploy"] { background: #fef2f2; color: var(--step-deploy); }
-        .nav-item[data-step="deploy"]:hover, .nav-item[data-step="deploy"].active { background: var(--step-deploy); color: white; }
+        .nav-item[data-step="deploy"] { background: rgba(251, 146, 60, 0.15); color: var(--step-deploy); }
+        .nav-item[data-step="deploy"]:hover, .nav-item[data-step="deploy"].active { background: var(--step-deploy); color: #0f172a; }
 
-        .nav-item[data-step="done"] { background: #f3f4f6; color: var(--step-done); }
-        .nav-item[data-step="done"]:hover, .nav-item[data-step="done"].active { background: var(--step-done); color: white; }
+        .nav-item[data-step="done"] { background: rgba(148, 163, 184, 0.15); color: var(--step-done); }
+        .nav-item[data-step="done"]:hover, .nav-item[data-step="done"].active { background: var(--step-done); color: #0f172a; }
 
         /* Main Content */
         .container {
@@ -210,11 +272,12 @@
 
         /* Overview Section */
         .overview {
-            background: white;
+            background: var(--card-bg);
             border-radius: 1rem;
             padding: 2rem;
             margin-bottom: 2rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            border: 1px solid var(--border);
         }
 
         .overview h2 {
@@ -278,14 +341,14 @@
             flex-shrink: 0;
         }
 
-        /* Modal for Flow Step Details - NEW */
+        /* Modal for Flow Step Details - Space Theme */
         .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.7);
             display: none;
             align-items: center;
             justify-content: center;
@@ -298,13 +361,15 @@
         }
 
         .modal {
-            background: white;
+            background: var(--card-bg);
             border-radius: 1rem;
             max-width: 500px;
             width: 100%;
             max-height: 80vh;
             overflow-y: auto;
             animation: modalIn 0.3s ease-out;
+            border: 1px solid var(--border);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
         }
 
         @keyframes modalIn {
@@ -398,18 +463,19 @@
             display: block;
             width: 100%;
             padding: 0.75rem;
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--primary) 0%, #a855f7 100%);
             color: white;
             border: none;
             border-radius: 0.5rem;
             font-size: 1rem;
             font-weight: 500;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
 
         .modal-go-btn:hover {
-            background: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
         }
 
         /* Process Section */
@@ -480,17 +546,20 @@
         }
 
         .process-card {
-            background: white;
+            background: var(--card-bg);
             border-radius: 0.75rem;
             padding: 1.5rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
             border-left: 4px solid;
             transition: transform 0.2s, box-shadow 0.2s;
+            border-top: 1px solid var(--border);
+            border-right: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
         }
 
         .process-card:hover {
             transform: translateX(4px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
         }
 
         .card-header {
@@ -529,9 +598,9 @@
             line-height: 1.7;
         }
 
-        /* Enhanced Output Style - UX IMPROVEMENT */
+        /* Enhanced Output Style - Space Theme */
         .card-output {
-            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            background: linear-gradient(135deg, rgba(52, 211, 153, 0.15) 0%, rgba(16, 185, 129, 0.1) 100%);
             border-radius: 0.5rem;
             padding: 0.75rem 1rem;
             margin-bottom: 1rem;
@@ -540,7 +609,7 @@
 
         .card-output-label {
             font-size: 0.7rem;
-            color: #047857;
+            color: var(--success);
             margin-bottom: 0.25rem;
             font-weight: 600;
             text-transform: uppercase;
@@ -550,15 +619,15 @@
         .card-output-value {
             font-size: 0.9rem;
             font-weight: 600;
-            color: #065f46;
+            color: var(--success);
         }
 
-        /* Enhanced Notes Style - UX IMPROVEMENT */
+        /* Enhanced Notes Style - Space Theme */
         .card-notes {
             font-size: 0.85rem;
             color: var(--text);
             padding: 0.75rem 1rem;
-            background: #fef3c7;
+            background: rgba(251, 191, 36, 0.1);
             border-radius: 0.5rem;
             border-left: 3px solid var(--warning);
             margin-top: 0.5rem;
@@ -566,7 +635,7 @@
 
         .card-notes-label {
             font-size: 0.7rem;
-            color: #92400e;
+            color: var(--warning);
             margin-bottom: 0.5rem;
             font-weight: 600;
             text-transform: uppercase;
@@ -575,21 +644,22 @@
 
         .card-notes li {
             margin-bottom: 0.3rem;
-            color: #78350f;
+            color: var(--text-light);
         }
 
-        /* Communication Badge */
+        /* Communication Badge - Space Theme */
         .comm-badge {
             display: inline-flex;
             align-items: center;
             gap: 0.3rem;
             padding: 0.4rem 0.8rem;
-            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            background: linear-gradient(135deg, rgba(96, 165, 250, 0.2) 0%, rgba(147, 197, 253, 0.15) 100%);
             border-radius: 0.5rem;
             font-size: 0.8rem;
-            color: #1e40af;
+            color: var(--step-review);
             margin-top: 0.5rem;
             font-weight: 500;
+            border: 1px solid rgba(96, 165, 250, 0.3);
         }
 
         /* Card Actions - Feedback - NEW */
@@ -666,11 +736,12 @@
             bottom: 70px;
             right: 0;
             width: 320px;
-            background: white;
+            background: var(--card-bg);
             border-radius: 1rem;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
             display: none;
             animation: popupIn 0.3s ease-out;
+            border: 1px solid var(--border);
         }
 
         .tips-popup.active {
@@ -690,15 +761,16 @@
 
         .tips-popup-header {
             padding: 1rem;
-            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.2) 0%, rgba(245, 158, 11, 0.15) 100%);
             border-radius: 1rem 1rem 0 0;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            border-bottom: 1px solid var(--border);
         }
 
         .tips-popup-header h4 {
-            color: #92400e;
+            color: var(--warning);
             font-size: 1rem;
         }
 
@@ -706,7 +778,7 @@
             background: none;
             border: none;
             cursor: pointer;
-            color: #92400e;
+            color: var(--warning);
             font-size: 1.2rem;
         }
 
@@ -889,8 +961,9 @@
     <div class="progress-bar" id="progressBar"></div>
 
     <header class="header">
-        <h1>서스테이닝 개발 프로세스 가이드</h1>
-        <p>개발 요청부터 배포까지, 누구나 쉽게 따라할 수 있는 단계별 안내서입니다</p>
+        <div class="badge">🚗 주차 제품 전용</div>
+        <h1>🚀 서스테이닝 개발 프로세스</h1>
+        <p>주차 제품의 개발 요청부터 배포까지, 누구나 쉽게 따라할 수 있는 단계별 안내서예요</p>
 
         <!-- Search Box - NEW -->
         <div class="search-container">
@@ -1734,7 +1807,7 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p>서스테이닝 개발 프로세스 가이드 | 제품 그룹 | 2026</p>
+            <p>🚀 주차 제품 서스테이닝 개발 프로세스 가이드 | 제품 그룹 | 2026</p>
         </div>
     </footer>
 
