@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>서스테이닝 개발 프로세스 가이드</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-light: #3b82f6;
+            --secondary: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+
+            /* 단계별 색상 */
+            --step-register: #8b5cf6;
+            --step-review: #3b82f6;
+            --step-plan: #06b6d4;
+            --step-develop: #10b981;
+            --step-test: #f59e0b;
+            --step-deploy: #ef4444;
+            --step-done: #6b7280;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, #1d4ed8 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Navigation */
+        .nav-container {
+            background: white;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 1rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+        }
+
+        .nav-item {
+            padding: 0.6rem 1.2rem;
+            border-radius: 2rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+            text-decoration: none;
+            color: var(--text);
+        }
+
+        .nav-item:hover {
+            transform: translateY(-2px);
+        }
+
+        .nav-item[data-step="register"] { background: #f3f0ff; color: var(--step-register); }
+        .nav-item[data-step="register"]:hover { background: var(--step-register); color: white; }
+
+        .nav-item[data-step="review"] { background: #eff6ff; color: var(--step-review); }
+        .nav-item[data-step="review"]:hover { background: var(--step-review); color: white; }
+
+        .nav-item[data-step="plan"] { background: #ecfeff; color: var(--step-plan); }
+        .nav-item[data-step="plan"]:hover { background: var(--step-plan); color: white; }
+
+        .nav-item[data-step="develop"] { background: #ecfdf5; color: var(--step-develop); }
+        .nav-item[data-step="develop"]:hover { background: var(--step-develop); color: white; }
+
+        .nav-item[data-step="test"] { background: #fffbeb; color: var(--step-test); }
+        .nav-item[data-step="test"]:hover { background: var(--step-test); color: white; }
+
+        .nav-item[data-step="deploy"] { background: #fef2f2; color: var(--step-deploy); }
+        .nav-item[data-step="deploy"]:hover { background: var(--step-deploy); color: white; }
+
+        .nav-item[data-step="done"] { background: #f3f4f6; color: var(--step-done); }
+        .nav-item[data-step="done"]:hover { background: var(--step-done); color: white; }
+
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Overview Section */
+        .overview {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .overview h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .flow-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 0;
+            overflow-x: auto;
+            gap: 0.5rem;
+        }
+
+        .flow-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 100px;
+        }
+
+        .flow-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: white;
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .flow-label {
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .flow-arrow {
+            font-size: 1.5rem;
+            color: var(--secondary);
+            flex-shrink: 0;
+        }
+
+        /* Process Section */
+        .process-section {
+            margin-bottom: 3rem;
+            scroll-margin-top: 100px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-number {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .section-title {
+            flex: 1;
+        }
+
+        .section-title h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .section-title p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .jira-badges {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .jira-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .jira-badge.prq {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .jira-badge.parking {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        /* Process Cards */
+        .process-cards {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .process-card {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-left: 4px solid;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .process-card:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .card-owner {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.3rem 0.8rem;
+            background: var(--bg);
+            border-radius: 1rem;
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .card-owner svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .card-description {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+
+        .card-output {
+            background: var(--bg);
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .card-output-label {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-bottom: 0.25rem;
+        }
+
+        .card-output-value {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .card-notes {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            padding-left: 1rem;
+            border-left: 2px solid var(--border);
+        }
+
+        .card-notes li {
+            margin-bottom: 0.3rem;
+        }
+
+        /* Communication Badge */
+        .comm-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.2rem 0.6rem;
+            background: #fef3c7;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            color: #92400e;
+            margin-top: 0.5rem;
+        }
+
+        /* Tips Section */
+        .tips-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .tips-box h3 {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+            margin-bottom: 0.75rem;
+            color: #92400e;
+        }
+
+        .tips-box ul {
+            list-style: none;
+            font-size: 0.9rem;
+            color: #78350f;
+        }
+
+        .tips-box li {
+            padding: 0.3rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .tips-box li::before {
+            content: "💡";
+            position: absolute;
+            left: 0;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-light);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--border);
+            margin-top: 3rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .nav {
+                gap: 0.3rem;
+            }
+
+            .nav-item {
+                padding: 0.5rem 0.8rem;
+                font-size: 0.8rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .flow-diagram {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .flow-arrow {
+                display: none;
+            }
+
+            .section-header {
+                flex-wrap: wrap;
+            }
+
+            .jira-badges {
+                width: 100%;
+                margin-top: 0.5rem;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .process-section {
+            animation: fadeInUp 0.5s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>🚀 서스테이닝 개발 프로세스</h1>
+        <p>개발 요청부터 배포까지, 단계별 가이드</p>
+    </header>
+
+    <div class="nav-container">
+        <nav class="nav">
+            <a href="#register" class="nav-item" data-step="register">1. 등록</a>
+            <a href="#review" class="nav-item" data-step="review">2. 검토</a>
+            <a href="#plan" class="nav-item" data-step="plan">3. 기획</a>
+            <a href="#develop" class="nav-item" data-step="develop">4. 개발</a>
+            <a href="#test" class="nav-item" data-step="test">5. 테스트</a>
+            <a href="#deploy" class="nav-item" data-step="deploy">6. 배포</a>
+            <a href="#done" class="nav-item" data-step="done">7. 완료</a>
+        </nav>
+    </div>
+
+    <main class="container">
+        <!-- Overview -->
+        <section class="overview">
+            <h2>📋 전체 프로세스 흐름</h2>
+            <div class="flow-diagram">
+                <div class="flow-step">
+                    <div class="flow-circle" style="background: var(--step-register)">등록</div>
+                    <div class="flow-label">PRQ 티켓<br>생성</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="flow-circle" style="background: var(--step-review)">검토</div>
+                    <div class="flow-label">백로그<br>검토</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="flow-circle" style="background: var(--step-plan)">기획</div>
+                    <div class="flow-label">PRD 작성<br>리뷰</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="flow-circle" style="background: var(--step-develop)">개발</div>
+                    <div class="flow-label">코드<br>개발</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="flow-circle" style="background: var(--step-test)">테스트</div>
+                    <div class="flow-label">QA<br>검증</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="flow-circle" style="background: var(--step-deploy)">배포</div>
+                    <div class="flow-label">운영환경<br>배포</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="flow-circle" style="background: var(--step-done)">완료</div>
+                    <div class="flow-label">모니터링<br>종결</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 1. 등록 -->
+        <section id="register" class="process-section">
+            <div class="section-header">
+                <div class="section-number" style="background: var(--step-register)">1</div>
+                <div class="section-title">
+                    <h2>등록</h2>
+                    <p>개발 요청을 PRQ 티켓으로 등록합니다</p>
+                </div>
+                <div class="jira-badges">
+                    <span class="jira-badge prq">PRQ: 등록</span>
+                </div>
+            </div>
+
+            <div class="process-cards">
+                <div class="process-card" style="border-color: var(--step-register)">
+                    <div class="card-header">
+                        <div class="card-title">PRQ 티켓 생성</div>
+                        <div class="card-owner">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                            요청자 (누구나)
+                        </div>
+                    </div>
+                    <div class="card-description">
+                        개발 요청이 필요한 건이 있으면 PRQ 티켓을 만듭니다.
+                    </div>
+                    <div class="card-output">
+                        <div class="card-output-label">산출물</div>
+                        <div class="card-output-value">📝 PRQ 티켓</div>
+                    </div>
+                    <ul class="card-notes">
+                        <li>누구나 자유롭게 등록 가능합니다</li>
+                        <li>'등록' 상태의 티켓은 검토/논의 대상이 아닙니다</li>
+                        <li>단순한 변경으로 예상되는 건은 '서스테이닝'입니다 (1sprint 이내 개발 물량)</li>
+                    </ul>
+                </div>
+
+                <div class="process-card" style="border-color: var(--step-register)">
+                    <div class="card-header">
+                        <div class="card-title">소속부서장 승인</div>
+                        <div class="card-owner">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                            요청자 소속 부서장
+                        </div>
+                    </div>
+                    <div class="card-description">
+                        요청자의 소속 부서장이 승인을 받은 후, 소속부서장이 지라 티켓의 상태를 '백로그'로 변경합니다.
+                    </div>
+                    <div class="card-output">
+                        <div class="card-output-label">산출물</div>
+                        <div class="card-output-value">📋 PRQ 티켓 State 변경 (등록 → 백로그)</div>
+                    </div>
+                </div>
+
+                <div class="process-card" style="border-color: var(--step-register)">
+                    <div class="card-header">
+                        <div class="card-title">본부별 요청 우선순위 설정</div>
+                        <div class="card-owner">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                            본부별 대표자 (거점본부: 브리모)
+                        </div>
+                    </div>
+                    <div class="card-description">
+                        요청 부서별 백로그 우선순위를 정합니다.
+                    </div>
+                    <div class="card-output">
+                        <div class="card-output-label">산출물</div>
+                        <div class="card-output-value">📊 PRQ 티켓 Priority 변경 (medium → A)</div>
+                    </div>
+                    <ul class="card-notes">
+                        <li>각 본부당 A등급의 SUS 백로그 3개로 제한됩니다</li>
+                        <li>Urgency는 위클리에서 합의된 건에 한해 제한적으로 사용합니다</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. 검토 -->
+        <section id="review" class="process-section">
+            <div class="section-header">
+                <div class="section-number" style="background: var(--step-review)">2</div>
+                <div class="section-title">
+                    <h2>검토</h2>
+                    <p>요청 건을 검토하고 개발 여부를 결정합니다</p>
+                </div>
+                <div class="jira-badges">
+                    <span class="jira-badge prq">PRQ: 백로그</span>
+                </div>
+            </div>
+
+            <div class="process-cards">
+                <div class="process-card" style="border-color: var(--step-review)">
+                    <div class="card-header">
+                        <div class="card-title">티켓 규모 분류</div>
+                        <div class="card-owner">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                            제품 팀장 (엘리스, 버드, 산토)
+                        </div>
+                    </div>
+                    <div class="card-description">
+                        프로젝트/서스테이닝이 구분이 잘 되었는지 확인합니다.
+                    </div>
+                    <div class="card-output">
+                        <div class="card-output-label">산출물</div>
+                        <div class="card-output-value">🏷️ PRQ 티켓 유형 조정 (SUS/Project)</div>
+                    </div>
+                    <ul class="card-notes">
+                        <li>개발기간이 2주를 초과하는 건은 프로젝트입니다</li>
+                        <li>프로젝트는 별도의 프로세스를 따릅니다 (프로젝트 제안서 작성 필요)</li>
+                    </ul>
+                </div>
+
+                <div class="process-card" style="border-color: var(--step-review)">
+                    <div class="card-header">
+                        <div class="card-title">개발 리소스 확인</div>
+                        <div class="card-owner">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                            제품 팀장 (엘리스, 버드, 산토)
+                        </div>
+                    </div>
+                    <div class="card-description">
+                        해당 스프린트에 투입 가능한 리소스를 확인합니다.
+                    </div>
+                    <div class="card-output">
+                        <div class="card-output-label">산출물</div>
+                        <div class="card-output-value">👥 제품팀별 가능 리소스 리스트 (위클리 문서에 의사와 공유)</div>
+                    </div>
+                </div>
+
+                <div class="process-card" style="border-color: var(--step-review)">
+                    <div class="card-header">
+                        <div class="card-title">백로그 그루밍</div>
+                        <div class="card-owner">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                            제품 그룹장 (줄라이)
+                        </div>
+                    </div>
+                    <div class="card-description">
+                        다음 스프린트부터 진행할 개발건을 1차 선정합니다.
+                    </div>
+                    <div class="card-output">
+                        <div class="card-output-label">산출물</div>
+                        <div class="card-output-value">💬 슬랙 #prd_parking 채널 공지</div>
+                    </div>
+                    <div class="comm-badge">📅 협의 장치: 백로그 그루밍 (격주 화)</div>
+                    <ul class="card-notes">
+                        <li>개발여부 최종 확정 상태가 아님</li>
+                        <li>검토후 프로젝트로 전환되거나, 검토 결과에 따라 선정이 취소될 수 있음 → 슬랙 채널을 통해 요청자에게 공유</li>
+                    </ul>
+                </div>
+
+                <div class="process-card" style="border-color: var(--step-review)">
+                    <div class="card-header">
+                        <div class="card-title">담당 PM 배정</div>
+                        <div class="card-owner">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                            제품 팀장 (엘리스, 산토)
+                        </div>
+                    </div>
+                    <div class="card-description">
+                        티켓 검토 담당팀 및 검토 담당자를 배정합니다. 필요시 함께 검토/논의할 개발 담당자를 배정합니다.
+                    </div>
+                    <div class="card-output">
+                        <div class="card-output-label">산출물</div>
+                        <div class="card-output-value">👤 PARKING 티켓 Assignee 입력</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. 기획 -->
+        <section id="plan" class="process-section">
+            <div class="section-header">
+                <div class="section-number" style="background: var(--step-plan)">3</div>
+                <div class="section-title">
+                    <h2>기획</h2>
+                    <p>요구사항을 정의하고 개발 준비를 완료합니다</p>
+                </div>
+                <div class="jira-badges">
+                    <span class="jira-badge prq">PRQ: 완료</span>
+                    <span class="jira-badge parking">PARKING: In Progress</span>
+                </div>
+            </div>
+
+            <div class="process-cards">
+                <div class="process-card" style="border-color: var(--step-plan)">
+                    <div class="card-header">
+                        <div class="card-title">PRD 작성</div>
+                        <div class="card-owner">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                            담당 개발자/PM, 이해관계자
+                        </div>
+                    </div>
+                    <div class="card-description">
+                        제품, 정책 변경사항을 확인하고, 변경이 필요한 정책을 협의합니다.
+                    </div>
+                    <div class="card-output">
+                        <div class="card-output-label">산출물</div>
+                        <div class="card-output-value">📄 유저스토리, 와이어프레임, 정책서 등 (PARKING Jira 티켓 내 링크 첨부)</div>
+                    </div>
+                </div>
+
+                <div class="process-card" style="border-color: var(--step-plan)">
+                    <div class="card-header">
+                        <div class="card-title">1차 리뷰</div>
+                        <div class="card-owner">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                            PM
+                        </div>
+                    </div>
+                    <div class="card-description">
+                        검토 후 기획&디자인 1차안을 제품조직 내 리뷰합니다.
+                    </div>
+                    <div class="card-output">
+                        <div class="card-output-label">산출물</div>
+                        <div class="card-output-value">🎯 NEWPK, PARKFE, PARKMOB 티켓 생성 / 위 티켓의 Priority = A로 변경</div>
+                    </div>
+                    <div class="comm-badge">📅 협의 장치: 그룹 위클리 (필요시 별도 미팅)</div>
+                    <ul class="card-notes">
+                        <li>SUS 크기나 사안에 맞춰 대처한다</li>
+                    </ul>
+                </div>
+
+                <div class="process-card" style="border-color: var(--step-plan)">
+                    <div class="card-header">
+                        <div class="card-title">Jira 티켓 업데이트</div>
+                        <div class="card-owner">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                            PM
+                        </div>
+                    </div>
+                    <div class="card-description">
+                        리뷰를 진행하면서 업데이트 된 내용을 PARKING 티켓에 반영합니다.
+                    </div>
+                    <div class="card-output">
+                        <div class="card-output-label">산출물</div>
+                        <div class="card-output-value">📝 PARKING 티켓 내용 수정</div>
+                    </div>
+                </div>
+
+                <div class="process-card" style="border-color: var(--step-plan)">
+                    <div class="card-header">
+                        <div class="card-title">2차 리뷰</div>
+                        <div class="card-owner">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                            PM
+                        </div>
+                    </div>
+                    <div class="card-description">
+                        그룹내에서 확인된 내용으로 이해관계자 리뷰합니다.
+                    </div>
+                    <div class="comm-badge">📅 협의 장치: 제품위클리 또는 별도 회의</div>
+                    <ul class="card-notes">
+                        <li>SUS 크기나 사안에 맞춰 대처한다</li>
+                    </ul>
+                </div>
+
+                <div class="process-card" style="border-color: var(--step-plan)">
+                    <div class="card-header">
+                        <div class="card-title">스프린트 플래닝 준비</div>
+                        <div class="card-owner">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                            제품 팀장 (엘리스, 버드, 산토)
+                        </div>
+                    </div>
+                    <div class="card-description">
+                        스프린트 플래닝을 준비합니다.
+                    </div>
+                    <div class="card-output">
+                        <div class="card-output-label">산출물</div>
+                        <div class="card-output-value">📊 SUS Kanban for 주차 보드</div>
+                    </div>
+                </div>
+
+                <div class="process-card" style="border-color: var(--step-plan)">
+                    <div class="card-header">
+                        <div class="card-title">개발 담당자 배정</div>
+                        <div class="card-owner">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                            제품 팀장 (엘리스, 버드, 산토)
+                        </div>
+                    </div>
+                    <div class="card-description">
+                        제품 개발 담당자를 최종 배정합니다 (FE개발, BE개발, PD, PM).
+                    </div>
+                    <div class="card-output">
+                        <div class="card-output-label">산출물</div>
+                        <div class="card-output-value">👤 PARKING 티켓 개발담당자 입력</div>
+                    </div>
+                    <div class="comm-badge">📅 협의 장치: 스프린트 플래닝 (격주 금)</div>
+                    <ul class="card-notes">
+                        <li>7번에서 확정되었지만 다시 확인</li>
+                        <li>기획이 끝난 티켓인 것을 구분할 수 있어야 함</li>
+                    </ul>
+                </div>
+
+                <div class="process-card" style="border-color: var(--step-plan)">
+                    <div class="card-header">
+                        <div class="card-title">개발 착수 공지</div>
+                        <div class="card-owner">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                            제품 팀장 (엘리스, 버드, 산토)
+                        </div>
+                    </div>
+                    <div class="card-description">
+                        다음 스프린트 내 배포건을 최종 확정하여 공유합니다. (스프린트 내 개발되지 않는 건은 요청자에게 알린다)
+                    </div>
+                    <div class="card-output">
+                        <div class="card-output-label">산출물</div>
+                        <div class="card-output-value">💬 슬랙 #prd_parking 채널 공지</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. 개발 -->
+        <section id="develop" class="process-section">
+            <div class="section-header">
+                <div class="section-number" style="background: var(--step-develop)">4</div>
+                <div class="section-title">
+                    <h2>개발</h2>
+                    <p>실제 코드를 개발합니다</p>
+                </div>
+                <div class="jira-badges">
+                    <span class="jira-badge prq">PRQ: 완료</span>
+                    <span class="jira-badge parking">PARKING: 개발 진행중</span>
+                </div>
+            </div>
+
+            <div class="process-cards">
+                <div class="process-card" style="border-color: var(--step-develop)">
+                    <div class="card-header">
+                        <div class="card-title">제품 기획</div>
+                        <div class="card-owner">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                            담당 개발자/PM/PD
+                        </div>
+                    </div>
+                    <div class="card-description">
+                        제품 변경사항을 최종 기획, 디자인합니다.
+                    </div>
+                </div>
+
+                <div class="process-card" style="border-color: var(--step-develop)">
+                    <div class="card-header">
+                        <div class="card-title">배포 일정 공지</div>
+                        <div class="card-owner">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                            담당 개발자
+                        </div>
+                    </div>
+                    <div class="card-description">
+                        배포 일정을 확정하고, 채널에 공유합니다.
+                    </div>
+                    <div class="card-output">
+                        <div class="card-output-label">산출물</div>
+                        <div class="card-output-value">💬 슬랙 #prd_parking 채널 공지 / 📅 Jira 티켓에 일정 수정</div>
+                    </div>
+                    <div class="comm-badge">📅 협의 장치: 배포 일정 계획 (격주 월)</div>
+                    <ul class="card-notes">
+                        <li>휴일 전날은 배포 안됨</li>
+                    </ul>
+                </div>
+
+                <div class="process-card" style="border-color: var(--step-develop)">
+                    <div class="card-header">
+                        <div class="card-title">개발</div>
+                        <div class="card-owner">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                            담당 개발자
+                        </div>
+                    </div>
+                    <div class="card-description">
+                        제품 변경사항을 개발합니다 (FE, BE).
+                    </div>
+                    <div class="card-output">
+                        <div class="card-output-label">산출물</div>
+                        <div class="card-output-value">🎫 QA, CR 티켓 생성 (automation)</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. 테스트 -->
+        <section id="test" class="process-section">
+            <div class="section-header">
+                <div class="section-number" style="background: var(--step-test)">5</div>
+                <div class="section-title">
+                    <h2>테스트</h2>
+                    <p>개발된 기능을 검증합니다</p>
+                </div>
+                <div class="jira-badges">
+                    <span class="jira-badge prq">PRQ: 완료</span>
+                    <span class="jira-badge parking">PARKING: QA</span>
+                </div>
+            </div>
+
+            <div class="process-cards">
+                <div class="process-card" style="border-color: var(--step-test)">
+                    <div class="card-header">
+                        <div class="card-title">개발환경 배포</div>
+                        <div class="card-owner">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                            담당 개발자/PM
+                        </div>
+                    </div>
+                    <div class="card-description">
+                        개발 환경에서 배포하고 요청자에게 공유합니다.
+                    </div>
+                </div>
+
+                <div class="process-card" style="border-color: var(--step-test)">
+                    <div class="card-header">
+                        <div class="card-title">개발환경 테스트</div>
+                        <div class="card-owner">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                            담당 개발자/PM/QA, 요청자
+                        </div>
+                    </div>
+                    <div class="card-description">
+                        개발환경에서 테스트합니다.
+                    </div>
+                </div>
+
+                <div class="process-card" style="border-color: var(--step-test)">
+                    <div class="card-header">
+                        <div class="card-title">스프린트 데모</div>
+                        <div class="card-owner">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                            담당 개발자 → 요청자
+                        </div>
+                    </div>
+                    <div class="card-description">
+                        제품 변경사항을 리뷰합니다 (데모).
+                    </div>
+                    <div class="card-output">
+                        <div class="card-output-label">산출물</div>
+                        <div class="card-output-value">🎬 데모(미팅) 녹화 영상, 피드백</div>
+                    </div>
+                    <div class="comm-badge">📅 협의 장치: 스프린트 데모 (격주 수)</div>
+                    <ul class="card-notes">
+                        <li>추가 개선이 필요한경우 추가 백로그 티켓을 발행한다 (배포전 수정이 가능한경우 반영하여 배포한다)</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. 배포 -->
+        <section id="deploy" class="process-section">
+            <div class="section-header">
+                <div class="section-number" style="background: var(--step-deploy)">6</div>
+                <div class="section-title">
+                    <h2>배포</h2>
+                    <p>운영 환경에 배포합니다</p>
+                </div>
+                <div class="jira-badges">
+                    <span class="jira-badge prq">PRQ: 완료</span>
+                    <span class="jira-badge parking">PARKING: Deployed</span>
+                </div>
+            </div>
+
+            <div class="process-cards">
+                <div class="process-card" style="border-color: var(--step-deploy)">
+                    <div class="card-header">
+                        <div class="card-title">운영환경 배포</div>
+                        <div class="card-owner">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                            담당 개발자
+                        </div>
+                    </div>
+                    <div class="card-description">
+                        서비스 운영 환경에 배포합니다.
+                    </div>
+                </div>
+
+                <div class="process-card" style="border-color: var(--step-deploy)">
+                    <div class="card-header">
+                        <div class="card-title">배포 후 모니터링</div>
+                        <div class="card-owner">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                            담당 개발자/PM/PD, 요청자
+                        </div>
+                    </div>
+                    <div class="card-description">
+                        서비스 운영 환경에서 모니터링합니다.
+                    </div>
+                    <ul class="card-notes">
+                        <li>버그, 장애 발생시 즉시 제보하여 처리한다</li>
+                        <li>추가 개선사항은 백로그로 등록한다</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. 완료 -->
+        <section id="done" class="process-section">
+            <div class="section-header">
+                <div class="section-number" style="background: var(--step-done)">7</div>
+                <div class="section-title">
+                    <h2>완료</h2>
+                    <p>모니터링을 종료하고 티켓을 마감합니다</p>
+                </div>
+                <div class="jira-badges">
+                    <span class="jira-badge prq">PRQ: 완료</span>
+                    <span class="jira-badge parking">PARKING: Done</span>
+                </div>
+            </div>
+
+            <div class="process-cards">
+                <div class="process-card" style="border-color: var(--step-done)">
+                    <div class="card-header">
+                        <div class="card-title">종결</div>
+                        <div class="card-owner">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                            담당 개발자
+                        </div>
+                    </div>
+                    <div class="card-description">
+                        모니터링을 종료합니다.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tips -->
+        <div class="tips-box">
+            <h3>📌 알아두면 좋은 정보</h3>
+            <ul>
+                <li><strong>서스테이닝</strong>: 1 Sprint(2주) 이내 개발 가능한 단순 변경 건</li>
+                <li><strong>프로젝트</strong>: 2주 초과 개발 건, 별도 프로젝트 제안서 필요</li>
+                <li><strong>휴일 전날</strong>: 배포 불가</li>
+                <li><strong>긴급 건(Urgency)</strong>: 위클리에서 합의된 건만 가능</li>
+                <li><strong>본부당 A등급</strong>: SUS 백로그 최대 3개</li>
+            </ul>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>서스테이닝 개발 프로세스 가이드 | 제품 그룹</p>
+    </footer>
+
+    <script>
+        // Smooth scroll for navigation
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Highlight active nav item on scroll
+        const sections = document.querySelectorAll('.process-section');
+        const navItems = document.querySelectorAll('.nav-item');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (scrollY >= sectionTop - 150) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navItems.forEach(item => {
+                item.style.transform = '';
+                if (item.getAttribute('href') === `#${current}`) {
+                    item.style.transform = 'scale(1.05)';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
