@@ -48,7 +48,7 @@
         .header {
             background: linear-gradient(135deg, var(--primary) 0%, #1d4ed8 100%);
             color: white;
-            padding: 3rem 2rem;
+            padding: 3rem 2rem 2rem;
             text-align: center;
         }
 
@@ -61,6 +61,87 @@
         .header p {
             font-size: 1.1rem;
             opacity: 0.9;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Search Box - NEW */
+        .search-container {
+            max-width: 500px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.8rem 1rem 0.8rem 2.5rem;
+            border: none;
+            border-radius: 2rem;
+            font-size: 1rem;
+            outline: none;
+            background: rgba(255,255,255,0.95);
+            color: var(--text);
+        }
+
+        .search-input::placeholder {
+            color: var(--text-light);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            width: 18px;
+            height: 18px;
+        }
+
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            margin-top: 0.5rem;
+            max-height: 300px;
+            overflow-y: auto;
+            display: none;
+            z-index: 200;
+        }
+
+        .search-results.active {
+            display: block;
+        }
+
+        .search-result-item {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .search-result-item:hover {
+            background: var(--bg);
+        }
+
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
+
+        .search-result-step {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 1rem;
+            color: white;
+            font-weight: 500;
+        }
+
+        .search-result-title {
+            font-weight: 500;
         }
 
         /* Navigation */
@@ -95,30 +176,30 @@
             color: var(--text);
         }
 
-        .nav-item:hover {
+        .nav-item:hover, .nav-item.active {
             transform: translateY(-2px);
         }
 
         .nav-item[data-step="register"] { background: #f3f0ff; color: var(--step-register); }
-        .nav-item[data-step="register"]:hover { background: var(--step-register); color: white; }
+        .nav-item[data-step="register"]:hover, .nav-item[data-step="register"].active { background: var(--step-register); color: white; }
 
         .nav-item[data-step="review"] { background: #eff6ff; color: var(--step-review); }
-        .nav-item[data-step="review"]:hover { background: var(--step-review); color: white; }
+        .nav-item[data-step="review"]:hover, .nav-item[data-step="review"].active { background: var(--step-review); color: white; }
 
         .nav-item[data-step="plan"] { background: #ecfeff; color: var(--step-plan); }
-        .nav-item[data-step="plan"]:hover { background: var(--step-plan); color: white; }
+        .nav-item[data-step="plan"]:hover, .nav-item[data-step="plan"].active { background: var(--step-plan); color: white; }
 
         .nav-item[data-step="develop"] { background: #ecfdf5; color: var(--step-develop); }
-        .nav-item[data-step="develop"]:hover { background: var(--step-develop); color: white; }
+        .nav-item[data-step="develop"]:hover, .nav-item[data-step="develop"].active { background: var(--step-develop); color: white; }
 
         .nav-item[data-step="test"] { background: #fffbeb; color: var(--step-test); }
-        .nav-item[data-step="test"]:hover { background: var(--step-test); color: white; }
+        .nav-item[data-step="test"]:hover, .nav-item[data-step="test"].active { background: var(--step-test); color: white; }
 
         .nav-item[data-step="deploy"] { background: #fef2f2; color: var(--step-deploy); }
-        .nav-item[data-step="deploy"]:hover { background: var(--step-deploy); color: white; }
+        .nav-item[data-step="deploy"]:hover, .nav-item[data-step="deploy"].active { background: var(--step-deploy); color: white; }
 
         .nav-item[data-step="done"] { background: #f3f4f6; color: var(--step-done); }
-        .nav-item[data-step="done"]:hover { background: var(--step-done); color: white; }
+        .nav-item[data-step="done"]:hover, .nav-item[data-step="done"].active { background: var(--step-done); color: white; }
 
         /* Main Content */
         .container {
@@ -158,6 +239,12 @@
             flex-direction: column;
             align-items: center;
             min-width: 100px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .flow-step:hover {
+            transform: scale(1.1);
         }
 
         .flow-circle {
@@ -172,6 +259,11 @@
             font-size: 0.8rem;
             margin-bottom: 0.5rem;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: box-shadow 0.2s, transform 0.2s;
+        }
+
+        .flow-step:hover .flow-circle {
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
         }
 
         .flow-label {
@@ -184,6 +276,140 @@
             font-size: 1.5rem;
             color: var(--secondary);
             flex-shrink: 0;
+        }
+
+        /* Modal for Flow Step Details - NEW */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 1rem;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 1rem;
+            max-width: 500px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: modalIn 0.3s ease-out;
+        }
+
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .modal-step-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .modal-title h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .modal-title p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .modal-close {
+            margin-left: auto;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            color: var(--text-light);
+            font-size: 1.5rem;
+            line-height: 1;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-summary {
+            background: var(--bg);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .modal-summary h4 {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-summary ul {
+            list-style: none;
+            font-size: 0.9rem;
+        }
+
+        .modal-summary li {
+            padding: 0.3rem 0;
+            padding-left: 1.2rem;
+            position: relative;
+        }
+
+        .modal-summary li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+        }
+
+        .modal-go-btn {
+            display: block;
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .modal-go-btn:hover {
+            background: #1d4ed8;
         }
 
         /* Process Section */
@@ -303,33 +529,53 @@
             line-height: 1.7;
         }
 
+        /* Enhanced Output Style - UX IMPROVEMENT */
         .card-output {
-            background: var(--bg);
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
             border-radius: 0.5rem;
             padding: 0.75rem 1rem;
             margin-bottom: 1rem;
+            border-left: 3px solid var(--success);
         }
 
         .card-output-label {
-            font-size: 0.75rem;
-            color: var(--text-light);
+            font-size: 0.7rem;
+            color: #047857;
             margin-bottom: 0.25rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .card-output-value {
             font-size: 0.9rem;
-            font-weight: 500;
+            font-weight: 600;
+            color: #065f46;
         }
 
+        /* Enhanced Notes Style - UX IMPROVEMENT */
         .card-notes {
             font-size: 0.85rem;
-            color: var(--text-light);
-            padding-left: 1rem;
-            border-left: 2px solid var(--border);
+            color: var(--text);
+            padding: 0.75rem 1rem;
+            background: #fef3c7;
+            border-radius: 0.5rem;
+            border-left: 3px solid var(--warning);
+            margin-top: 0.5rem;
+        }
+
+        .card-notes-label {
+            font-size: 0.7rem;
+            color: #92400e;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .card-notes li {
             margin-bottom: 0.3rem;
+            color: #78350f;
         }
 
         /* Communication Badge */
@@ -337,57 +583,231 @@
             display: inline-flex;
             align-items: center;
             gap: 0.3rem;
-            padding: 0.2rem 0.6rem;
-            background: #fef3c7;
-            border-radius: 0.25rem;
-            font-size: 0.75rem;
-            color: #92400e;
+            padding: 0.4rem 0.8rem;
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border-radius: 0.5rem;
+            font-size: 0.8rem;
+            color: #1e40af;
             margin-top: 0.5rem;
+            font-weight: 500;
         }
 
-        /* Tips Section */
-        .tips-box {
-            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            margin-top: 2rem;
-        }
-
-        .tips-box h3 {
+        /* Card Actions - Feedback - NEW */
+        .card-actions {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            font-size: 1rem;
-            margin-bottom: 0.75rem;
+            gap: 1rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .like-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.4rem 0.8rem;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 2rem;
+            cursor: pointer;
+            font-size: 0.8rem;
+            color: var(--text-light);
+            transition: all 0.2s;
+        }
+
+        .like-btn:hover {
+            background: #fef2f2;
+            border-color: #fecaca;
+            color: var(--danger);
+        }
+
+        .like-btn.liked {
+            background: #fef2f2;
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        .like-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Floating Tips Button - NEW */
+        .floating-tips {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 90;
+        }
+
+        .tips-toggle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%);
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .tips-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(245, 158, 11, 0.5);
+        }
+
+        .tips-popup {
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            width: 320px;
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            display: none;
+            animation: popupIn 0.3s ease-out;
+        }
+
+        .tips-popup.active {
+            display: block;
+        }
+
+        @keyframes popupIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .tips-popup-header {
+            padding: 1rem;
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-radius: 1rem 1rem 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .tips-popup-header h4 {
             color: #92400e;
+            font-size: 1rem;
         }
 
-        .tips-box ul {
+        .tips-popup-close {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #92400e;
+            font-size: 1.2rem;
+        }
+
+        .tips-popup-body {
+            padding: 1rem;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .tips-popup-body ul {
             list-style: none;
-            font-size: 0.9rem;
-            color: #78350f;
+            font-size: 0.85rem;
         }
 
-        .tips-box li {
-            padding: 0.3rem 0;
+        .tips-popup-body li {
+            padding: 0.5rem 0;
             padding-left: 1.5rem;
             position: relative;
+            border-bottom: 1px solid var(--border);
         }
 
-        .tips-box li::before {
+        .tips-popup-body li:last-child {
+            border-bottom: none;
+        }
+
+        .tips-popup-body li::before {
             content: "💡";
             position: absolute;
             left: 0;
         }
 
-        /* Footer */
+        /* Enhanced Footer - NEW */
         .footer {
-            text-align: center;
-            padding: 2rem;
-            color: var(--text-light);
-            font-size: 0.85rem;
-            border-top: 1px solid var(--border);
+            background: var(--text);
+            color: white;
+            padding: 3rem 2rem;
             margin-top: 3rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h4 {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a {
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        .footer-section a:hover {
+            color: white;
+        }
+
+        .footer-contact p {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-contact a {
+            color: var(--primary-light);
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 2rem auto 0;
+            padding-top: 2rem;
+            border-top: 1px solid #334155;
+            text-align: center;
+            color: #64748b;
+            font-size: 0.85rem;
+        }
+
+        /* Progress Indicator - NEW */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--step-register), var(--step-review), var(--step-plan), var(--step-develop), var(--step-test), var(--step-deploy), var(--step-done));
+            z-index: 101;
+            transition: width 0.1s;
         }
 
         /* Responsive */
@@ -426,6 +846,20 @@
                 width: 100%;
                 margin-top: 0.5rem;
             }
+
+            .floating-tips {
+                bottom: 1rem;
+                right: 1rem;
+            }
+
+            .tips-popup {
+                width: 280px;
+                right: -0.5rem;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
         }
 
         /* Animation */
@@ -443,12 +877,30 @@
         .process-section {
             animation: fadeInUp 0.5s ease-out;
         }
+
+        /* Hide class for search filter */
+        .hidden {
+            display: none !important;
+        }
     </style>
 </head>
 <body>
+    <!-- Progress Bar -->
+    <div class="progress-bar" id="progressBar"></div>
+
     <header class="header">
-        <h1>🚀 서스테이닝 개발 프로세스</h1>
-        <p>개발 요청부터 배포까지, 단계별 가이드</p>
+        <h1>서스테이닝 개발 프로세스 가이드</h1>
+        <p>개발 요청부터 배포까지, 누구나 쉽게 따라할 수 있는 단계별 안내서입니다</p>
+
+        <!-- Search Box - NEW -->
+        <div class="search-container">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.35-4.35"></path>
+            </svg>
+            <input type="text" class="search-input" id="searchInput" placeholder="궁금한 내용을 검색해 보세요 (예: PRD, 배포 일정, 담당자)">
+            <div class="search-results" id="searchResults"></div>
+        </div>
     </header>
 
     <div class="nav-container">
@@ -466,39 +918,39 @@
     <main class="container">
         <!-- Overview -->
         <section class="overview">
-            <h2>📋 전체 프로세스 흐름</h2>
+            <h2>📋 전체 프로세스 흐름 <span style="font-size: 0.8rem; color: var(--text-light); font-weight: 400;">(각 단계를 클릭하시면 자세한 내용을 확인하실 수 있어요)</span></h2>
             <div class="flow-diagram">
-                <div class="flow-step">
+                <div class="flow-step" onclick="openModal('register')">
                     <div class="flow-circle" style="background: var(--step-register)">등록</div>
                     <div class="flow-label">PRQ 티켓<br>생성</div>
                 </div>
                 <div class="flow-arrow">→</div>
-                <div class="flow-step">
+                <div class="flow-step" onclick="openModal('review')">
                     <div class="flow-circle" style="background: var(--step-review)">검토</div>
                     <div class="flow-label">백로그<br>검토</div>
                 </div>
                 <div class="flow-arrow">→</div>
-                <div class="flow-step">
+                <div class="flow-step" onclick="openModal('plan')">
                     <div class="flow-circle" style="background: var(--step-plan)">기획</div>
                     <div class="flow-label">PRD 작성<br>리뷰</div>
                 </div>
                 <div class="flow-arrow">→</div>
-                <div class="flow-step">
+                <div class="flow-step" onclick="openModal('develop')">
                     <div class="flow-circle" style="background: var(--step-develop)">개발</div>
                     <div class="flow-label">코드<br>개발</div>
                 </div>
                 <div class="flow-arrow">→</div>
-                <div class="flow-step">
+                <div class="flow-step" onclick="openModal('test')">
                     <div class="flow-circle" style="background: var(--step-test)">테스트</div>
                     <div class="flow-label">QA<br>검증</div>
                 </div>
                 <div class="flow-arrow">→</div>
-                <div class="flow-step">
+                <div class="flow-step" onclick="openModal('deploy')">
                     <div class="flow-circle" style="background: var(--step-deploy)">배포</div>
                     <div class="flow-label">운영환경<br>배포</div>
                 </div>
                 <div class="flow-arrow">→</div>
-                <div class="flow-step">
+                <div class="flow-step" onclick="openModal('done')">
                     <div class="flow-circle" style="background: var(--step-done)">완료</div>
                     <div class="flow-label">모니터링<br>종결</div>
                 </div>
@@ -506,12 +958,12 @@
         </section>
 
         <!-- 1. 등록 -->
-        <section id="register" class="process-section">
+        <section id="register" class="process-section" data-search="등록 PRQ 티켓 요청자 부서장 승인 우선순위">
             <div class="section-header">
                 <div class="section-number" style="background: var(--step-register)">1</div>
                 <div class="section-title">
                     <h2>등록</h2>
-                    <p>개발 요청을 PRQ 티켓으로 등록합니다</p>
+                    <p>개발이 필요한 내용을 PRQ 티켓으로 등록하는 첫 번째 단계예요</p>
                 </div>
                 <div class="jira-badges">
                     <span class="jira-badge prq">PRQ: 등록</span>
@@ -519,7 +971,7 @@
             </div>
 
             <div class="process-cards">
-                <div class="process-card" style="border-color: var(--step-register)">
+                <div class="process-card" style="border-color: var(--step-register)" data-search="PRQ 티켓 생성 요청자 누구나">
                     <div class="card-header">
                         <div class="card-title">PRQ 티켓 생성</div>
                         <div class="card-owner">
@@ -528,20 +980,29 @@
                         </div>
                     </div>
                     <div class="card-description">
-                        개발 요청이 필요한 건이 있으면 PRQ 티켓을 만듭니다.
+                        개발이 필요한 내용이 있으시면 먼저 PRQ 티켓을 만들어 주세요. 어렵지 않아요!
                     </div>
                     <div class="card-output">
                         <div class="card-output-label">산출물</div>
                         <div class="card-output-value">📝 PRQ 티켓</div>
                     </div>
-                    <ul class="card-notes">
-                        <li>누구나 자유롭게 등록 가능합니다</li>
-                        <li>'등록' 상태의 티켓은 검토/논의 대상이 아닙니다</li>
-                        <li>단순한 변경으로 예상되는 건은 '서스테이닝'입니다 (1sprint 이내 개발 물량)</li>
-                    </ul>
+                    <div class="card-notes">
+                        <div class="card-notes-label">💡 참고해 주세요</div>
+                        <ul>
+                            <li>누구나 자유롭게 등록하실 수 있어요</li>
+                            <li>'등록' 상태의 티켓은 아직 검토 대상이 아니에요 (부서장 승인 후 검토가 시작돼요)</li>
+                            <li>2주 이내에 개발 가능한 단순 변경 건은 '서스테이닝'으로 분류됩니다</li>
+                        </ul>
+                    </div>
+                    <div class="card-actions">
+                        <button class="like-btn" onclick="toggleLike(this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                            <span>도움이 됐어요</span>
+                        </button>
+                    </div>
                 </div>
 
-                <div class="process-card" style="border-color: var(--step-register)">
+                <div class="process-card" style="border-color: var(--step-register)" data-search="소속부서장 승인 백로그">
                     <div class="card-header">
                         <div class="card-title">소속부서장 승인</div>
                         <div class="card-owner">
@@ -550,15 +1011,21 @@
                         </div>
                     </div>
                     <div class="card-description">
-                        요청자의 소속 부서장이 승인을 받은 후, 소속부서장이 지라 티켓의 상태를 '백로그'로 변경합니다.
+                        소속 부서장님께서 승인해 주시면, Jira 티켓 상태가 '백로그'로 변경되어 검토가 시작돼요.
                     </div>
                     <div class="card-output">
                         <div class="card-output-label">산출물</div>
                         <div class="card-output-value">📋 PRQ 티켓 State 변경 (등록 → 백로그)</div>
                     </div>
+                    <div class="card-actions">
+                        <button class="like-btn" onclick="toggleLike(this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                            <span>도움이 됐어요</span>
+                        </button>
+                    </div>
                 </div>
 
-                <div class="process-card" style="border-color: var(--step-register)">
+                <div class="process-card" style="border-color: var(--step-register)" data-search="본부별 우선순위 Priority A등급 브리모">
                     <div class="card-header">
                         <div class="card-title">본부별 요청 우선순위 설정</div>
                         <div class="card-owner">
@@ -567,27 +1034,36 @@
                         </div>
                     </div>
                     <div class="card-description">
-                        요청 부서별 백로그 우선순위를 정합니다.
+                        본부별 대표자분께서 요청 건의 우선순위를 정해 주세요. 중요도에 따라 A등급을 부여할 수 있어요.
                     </div>
                     <div class="card-output">
                         <div class="card-output-label">산출물</div>
                         <div class="card-output-value">📊 PRQ 티켓 Priority 변경 (medium → A)</div>
                     </div>
-                    <ul class="card-notes">
-                        <li>각 본부당 A등급의 SUS 백로그 3개로 제한됩니다</li>
-                        <li>Urgency는 위클리에서 합의된 건에 한해 제한적으로 사용합니다</li>
-                    </ul>
+                    <div class="card-notes">
+                        <div class="card-notes-label">💡 참고해 주세요</div>
+                        <ul>
+                            <li>각 본부당 A등급 백로그는 최대 3개까지 지정하실 수 있어요</li>
+                            <li>긴급 건(Urgency)은 위클리 회의에서 합의된 경우에만 사용해 주세요</li>
+                        </ul>
+                    </div>
+                    <div class="card-actions">
+                        <button class="like-btn" onclick="toggleLike(this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                            <span>도움이 됐어요</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </section>
 
         <!-- 2. 검토 -->
-        <section id="review" class="process-section">
+        <section id="review" class="process-section" data-search="검토 백로그 규모 분류 리소스 그루밍 PM 배정">
             <div class="section-header">
                 <div class="section-number" style="background: var(--step-review)">2</div>
                 <div class="section-title">
                     <h2>검토</h2>
-                    <p>요청 건을 검토하고 개발 여부를 결정합니다</p>
+                    <p>요청하신 건을 꼼꼼히 검토하고, 개발 진행 여부를 결정하는 단계예요</p>
                 </div>
                 <div class="jira-badges">
                     <span class="jira-badge prq">PRQ: 백로그</span>
@@ -595,7 +1071,7 @@
             </div>
 
             <div class="process-cards">
-                <div class="process-card" style="border-color: var(--step-review)">
+                <div class="process-card" style="border-color: var(--step-review)" data-search="티켓 규모 분류 프로젝트 서스테이닝 제품 팀장 엘리스 버드 산토">
                     <div class="card-header">
                         <div class="card-title">티켓 규모 분류</div>
                         <div class="card-owner">
@@ -604,19 +1080,28 @@
                         </div>
                     </div>
                     <div class="card-description">
-                        프로젝트/서스테이닝이 구분이 잘 되었는지 확인합니다.
+                        요청하신 건이 서스테이닝인지 프로젝트인지 확인해요. 개발 규모에 따라 구분됩니다.
                     </div>
                     <div class="card-output">
                         <div class="card-output-label">산출물</div>
                         <div class="card-output-value">🏷️ PRQ 티켓 유형 조정 (SUS/Project)</div>
                     </div>
-                    <ul class="card-notes">
-                        <li>개발기간이 2주를 초과하는 건은 프로젝트입니다</li>
-                        <li>프로젝트는 별도의 프로세스를 따릅니다 (프로젝트 제안서 작성 필요)</li>
-                    </ul>
+                    <div class="card-notes">
+                        <div class="card-notes-label">💡 참고해 주세요</div>
+                        <ul>
+                            <li>개발 기간이 2주를 초과하면 프로젝트로 분류돼요</li>
+                            <li>프로젝트의 경우 별도의 프로젝트 제안서가 필요해요</li>
+                        </ul>
+                    </div>
+                    <div class="card-actions">
+                        <button class="like-btn" onclick="toggleLike(this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                            <span>도움이 됐어요</span>
+                        </button>
+                    </div>
                 </div>
 
-                <div class="process-card" style="border-color: var(--step-review)">
+                <div class="process-card" style="border-color: var(--step-review)" data-search="개발 리소스 확인 스프린트 위클리">
                     <div class="card-header">
                         <div class="card-title">개발 리소스 확인</div>
                         <div class="card-owner">
@@ -625,15 +1110,21 @@
                         </div>
                     </div>
                     <div class="card-description">
-                        해당 스프린트에 투입 가능한 리소스를 확인합니다.
+                        해당 스프린트에 개발 가능한 인력 현황을 확인해요. 원활한 일정 조율을 위한 중요한 단계예요.
                     </div>
                     <div class="card-output">
                         <div class="card-output-label">산출물</div>
                         <div class="card-output-value">👥 제품팀별 가능 리소스 리스트 (위클리 문서에 의사와 공유)</div>
                     </div>
+                    <div class="card-actions">
+                        <button class="like-btn" onclick="toggleLike(this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                            <span>도움이 됐어요</span>
+                        </button>
+                    </div>
                 </div>
 
-                <div class="process-card" style="border-color: var(--step-review)">
+                <div class="process-card" style="border-color: var(--step-review)" data-search="백로그 그루밍 줄라이 슬랙 prd_parking">
                     <div class="card-header">
                         <div class="card-title">백로그 그루밍</div>
                         <div class="card-owner">
@@ -642,20 +1133,29 @@
                         </div>
                     </div>
                     <div class="card-description">
-                        다음 스프린트부터 진행할 개발건을 1차 선정합니다.
+                        다음 스프린트에 진행할 개발 건을 1차로 선정해요. 선정 결과는 슬랙으로 안내드려요.
                     </div>
                     <div class="card-output">
                         <div class="card-output-label">산출물</div>
                         <div class="card-output-value">💬 슬랙 #prd_parking 채널 공지</div>
                     </div>
-                    <div class="comm-badge">📅 협의 장치: 백로그 그루밍 (격주 화)</div>
-                    <ul class="card-notes">
-                        <li>개발여부 최종 확정 상태가 아님</li>
-                        <li>검토후 프로젝트로 전환되거나, 검토 결과에 따라 선정이 취소될 수 있음 → 슬랙 채널을 통해 요청자에게 공유</li>
-                    </ul>
+                    <div class="comm-badge">📅 협의 장치: 백로그 그루밍 (격주 화요일)</div>
+                    <div class="card-notes">
+                        <div class="card-notes-label">💡 참고해 주세요</div>
+                        <ul>
+                            <li>이 단계에서는 아직 최종 확정이 아니에요</li>
+                            <li>검토 결과에 따라 프로젝트로 전환되거나 선정이 변경될 수 있어요. 변경 시 슬랙으로 안내드릴게요</li>
+                        </ul>
+                    </div>
+                    <div class="card-actions">
+                        <button class="like-btn" onclick="toggleLike(this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                            <span>도움이 됐어요</span>
+                        </button>
+                    </div>
                 </div>
 
-                <div class="process-card" style="border-color: var(--step-review)">
+                <div class="process-card" style="border-color: var(--step-review)" data-search="담당 PM 배정 Assignee PARKING">
                     <div class="card-header">
                         <div class="card-title">담당 PM 배정</div>
                         <div class="card-owner">
@@ -664,23 +1164,29 @@
                         </div>
                     </div>
                     <div class="card-description">
-                        티켓 검토 담당팀 및 검토 담당자를 배정합니다. 필요시 함께 검토/논의할 개발 담당자를 배정합니다.
+                        요청 건을 담당할 PM을 배정해요. 필요한 경우 함께 검토할 개발자도 함께 배정됩니다.
                     </div>
                     <div class="card-output">
                         <div class="card-output-label">산출물</div>
                         <div class="card-output-value">👤 PARKING 티켓 Assignee 입력</div>
+                    </div>
+                    <div class="card-actions">
+                        <button class="like-btn" onclick="toggleLike(this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                            <span>도움이 됐어요</span>
+                        </button>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- 3. 기획 -->
-        <section id="plan" class="process-section">
+        <section id="plan" class="process-section" data-search="기획 PRD 리뷰 스프린트 플래닝 개발 담당자 착수 공지">
             <div class="section-header">
                 <div class="section-number" style="background: var(--step-plan)">3</div>
                 <div class="section-title">
                     <h2>기획</h2>
-                    <p>요구사항을 정의하고 개발 준비를 완료합니다</p>
+                    <p>구체적인 요구사항을 정리하고, 개발을 위한 준비를 마무리하는 단계예요</p>
                 </div>
                 <div class="jira-badges">
                     <span class="jira-badge prq">PRQ: 완료</span>
@@ -689,7 +1195,7 @@
             </div>
 
             <div class="process-cards">
-                <div class="process-card" style="border-color: var(--step-plan)">
+                <div class="process-card" style="border-color: var(--step-plan)" data-search="PRD 작성 유저스토리 와이어프레임 정책서">
                     <div class="card-header">
                         <div class="card-title">PRD 작성</div>
                         <div class="card-owner">
@@ -698,15 +1204,21 @@
                         </div>
                     </div>
                     <div class="card-description">
-                        제품, 정책 변경사항을 확인하고, 변경이 필요한 정책을 협의합니다.
+                        제품과 정책의 변경사항을 꼼꼼히 확인하고, 관련 담당자분들과 함께 협의해요.
                     </div>
                     <div class="card-output">
                         <div class="card-output-label">산출물</div>
                         <div class="card-output-value">📄 유저스토리, 와이어프레임, 정책서 등 (PARKING Jira 티켓 내 링크 첨부)</div>
                     </div>
+                    <div class="card-actions">
+                        <button class="like-btn" onclick="toggleLike(this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                            <span>도움이 됐어요</span>
+                        </button>
+                    </div>
                 </div>
 
-                <div class="process-card" style="border-color: var(--step-plan)">
+                <div class="process-card" style="border-color: var(--step-plan)" data-search="1차 리뷰 기획 디자인 NEWPK PARKFE PARKMOB">
                     <div class="card-header">
                         <div class="card-title">1차 리뷰</div>
                         <div class="card-owner">
@@ -715,19 +1227,28 @@
                         </div>
                     </div>
                     <div class="card-description">
-                        검토 후 기획&디자인 1차안을 제품조직 내 리뷰합니다.
+                        기획과 디자인 1차안을 제품 조직 내에서 리뷰해요. 더 나은 방향을 함께 찾아가는 과정이에요.
                     </div>
                     <div class="card-output">
                         <div class="card-output-label">산출물</div>
                         <div class="card-output-value">🎯 NEWPK, PARKFE, PARKMOB 티켓 생성 / 위 티켓의 Priority = A로 변경</div>
                     </div>
                     <div class="comm-badge">📅 협의 장치: 그룹 위클리 (필요시 별도 미팅)</div>
-                    <ul class="card-notes">
-                        <li>SUS 크기나 사안에 맞춰 대처한다</li>
-                    </ul>
+                    <div class="card-notes">
+                        <div class="card-notes-label">💡 참고해 주세요</div>
+                        <ul>
+                            <li>건의 규모나 중요도에 따라 유연하게 진행돼요</li>
+                        </ul>
+                    </div>
+                    <div class="card-actions">
+                        <button class="like-btn" onclick="toggleLike(this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                            <span>도움이 됐어요</span>
+                        </button>
+                    </div>
                 </div>
 
-                <div class="process-card" style="border-color: var(--step-plan)">
+                <div class="process-card" style="border-color: var(--step-plan)" data-search="Jira 티켓 업데이트 PARKING">
                     <div class="card-header">
                         <div class="card-title">Jira 티켓 업데이트</div>
                         <div class="card-owner">
@@ -736,15 +1257,21 @@
                         </div>
                     </div>
                     <div class="card-description">
-                        리뷰를 진행하면서 업데이트 된 내용을 PARKING 티켓에 반영합니다.
+                        리뷰 중 업데이트된 내용을 PARKING 티켓에 빠짐없이 반영해요. 최신 상태를 유지하는 것이 중요해요.
                     </div>
                     <div class="card-output">
                         <div class="card-output-label">산출물</div>
                         <div class="card-output-value">📝 PARKING 티켓 내용 수정</div>
                     </div>
+                    <div class="card-actions">
+                        <button class="like-btn" onclick="toggleLike(this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                            <span>도움이 됐어요</span>
+                        </button>
+                    </div>
                 </div>
 
-                <div class="process-card" style="border-color: var(--step-plan)">
+                <div class="process-card" style="border-color: var(--step-plan)" data-search="2차 리뷰 이해관계자 제품위클리">
                     <div class="card-header">
                         <div class="card-title">2차 리뷰</div>
                         <div class="card-owner">
@@ -753,15 +1280,24 @@
                         </div>
                     </div>
                     <div class="card-description">
-                        그룹내에서 확인된 내용으로 이해관계자 리뷰합니다.
+                        그룹 내에서 정리된 내용을 바탕으로 이해관계자분들과 함께 리뷰해요.
                     </div>
                     <div class="comm-badge">📅 협의 장치: 제품위클리 또는 별도 회의</div>
-                    <ul class="card-notes">
-                        <li>SUS 크기나 사안에 맞춰 대처한다</li>
-                    </ul>
+                    <div class="card-notes">
+                        <div class="card-notes-label">💡 참고해 주세요</div>
+                        <ul>
+                            <li>건의 규모나 중요도에 따라 유연하게 진행돼요</li>
+                        </ul>
+                    </div>
+                    <div class="card-actions">
+                        <button class="like-btn" onclick="toggleLike(this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                            <span>도움이 됐어요</span>
+                        </button>
+                    </div>
                 </div>
 
-                <div class="process-card" style="border-color: var(--step-plan)">
+                <div class="process-card" style="border-color: var(--step-plan)" data-search="스프린트 플래닝 준비 Kanban 보드">
                     <div class="card-header">
                         <div class="card-title">스프린트 플래닝 준비</div>
                         <div class="card-owner">
@@ -770,15 +1306,21 @@
                         </div>
                     </div>
                     <div class="card-description">
-                        스프린트 플래닝을 준비합니다.
+                        스프린트 플래닝을 위해 개발 일정과 업무를 정리해요.
                     </div>
                     <div class="card-output">
                         <div class="card-output-label">산출물</div>
                         <div class="card-output-value">📊 SUS Kanban for 주차 보드</div>
                     </div>
+                    <div class="card-actions">
+                        <button class="like-btn" onclick="toggleLike(this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                            <span>도움이 됐어요</span>
+                        </button>
+                    </div>
                 </div>
 
-                <div class="process-card" style="border-color: var(--step-plan)">
+                <div class="process-card" style="border-color: var(--step-plan)" data-search="개발 담당자 배정 FE BE PD PM">
                     <div class="card-header">
                         <div class="card-title">개발 담당자 배정</div>
                         <div class="card-owner">
@@ -787,20 +1329,29 @@
                         </div>
                     </div>
                     <div class="card-description">
-                        제품 개발 담당자를 최종 배정합니다 (FE개발, BE개발, PD, PM).
+                        실제 개발을 담당할 분들을 최종 배정해요 (FE개발, BE개발, PD, PM).
                     </div>
                     <div class="card-output">
                         <div class="card-output-label">산출물</div>
                         <div class="card-output-value">👤 PARKING 티켓 개발담당자 입력</div>
                     </div>
-                    <div class="comm-badge">📅 협의 장치: 스프린트 플래닝 (격주 금)</div>
-                    <ul class="card-notes">
-                        <li>7번에서 확정되었지만 다시 확인</li>
-                        <li>기획이 끝난 티켓인 것을 구분할 수 있어야 함</li>
-                    </ul>
+                    <div class="comm-badge">📅 협의 장치: 스프린트 플래닝 (격주 금요일)</div>
+                    <div class="card-notes">
+                        <div class="card-notes-label">💡 참고해 주세요</div>
+                        <ul>
+                            <li>앞 단계에서 배정되었더라도 한 번 더 확인해요</li>
+                            <li>기획이 완료된 티켓과 진행 중인 티켓을 구분해 주세요</li>
+                        </ul>
+                    </div>
+                    <div class="card-actions">
+                        <button class="like-btn" onclick="toggleLike(this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                            <span>도움이 됐어요</span>
+                        </button>
+                    </div>
                 </div>
 
-                <div class="process-card" style="border-color: var(--step-plan)">
+                <div class="process-card" style="border-color: var(--step-plan)" data-search="개발 착수 공지 슬랙">
                     <div class="card-header">
                         <div class="card-title">개발 착수 공지</div>
                         <div class="card-owner">
@@ -809,23 +1360,29 @@
                         </div>
                     </div>
                     <div class="card-description">
-                        다음 스프린트 내 배포건을 최종 확정하여 공유합니다. (스프린트 내 개발되지 않는 건은 요청자에게 알린다)
+                        다음 스프린트에 배포될 건들을 최종 확정하여 공유해요. 이번 스프린트에 진행되지 않는 건은 요청자분께 따로 안내드려요.
                     </div>
                     <div class="card-output">
                         <div class="card-output-label">산출물</div>
                         <div class="card-output-value">💬 슬랙 #prd_parking 채널 공지</div>
+                    </div>
+                    <div class="card-actions">
+                        <button class="like-btn" onclick="toggleLike(this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                            <span>도움이 됐어요</span>
+                        </button>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- 4. 개발 -->
-        <section id="develop" class="process-section">
+        <section id="develop" class="process-section" data-search="개발 제품 기획 배포 일정 QA CR 티켓">
             <div class="section-header">
                 <div class="section-number" style="background: var(--step-develop)">4</div>
                 <div class="section-title">
                     <h2>개발</h2>
-                    <p>실제 코드를 개발합니다</p>
+                    <p>실제 코드 개발이 진행되는 단계예요. 요청하신 기능이 만들어지고 있어요!</p>
                 </div>
                 <div class="jira-badges">
                     <span class="jira-badge prq">PRQ: 완료</span>
@@ -834,7 +1391,7 @@
             </div>
 
             <div class="process-cards">
-                <div class="process-card" style="border-color: var(--step-develop)">
+                <div class="process-card" style="border-color: var(--step-develop)" data-search="제품 기획 디자인">
                     <div class="card-header">
                         <div class="card-title">제품 기획</div>
                         <div class="card-owner">
@@ -843,11 +1400,17 @@
                         </div>
                     </div>
                     <div class="card-description">
-                        제품 변경사항을 최종 기획, 디자인합니다.
+                        개발에 앞서 제품 변경사항을 최종 기획하고 디자인을 확정해요.
+                    </div>
+                    <div class="card-actions">
+                        <button class="like-btn" onclick="toggleLike(this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                            <span>도움이 됐어요</span>
+                        </button>
                     </div>
                 </div>
 
-                <div class="process-card" style="border-color: var(--step-develop)">
+                <div class="process-card" style="border-color: var(--step-develop)" data-search="배포 일정 공지 휴일">
                     <div class="card-header">
                         <div class="card-title">배포 일정 공지</div>
                         <div class="card-owner">
@@ -856,19 +1419,28 @@
                         </div>
                     </div>
                     <div class="card-description">
-                        배포 일정을 확정하고, 채널에 공유합니다.
+                        배포 일정을 확정하고 슬랙 채널에 공유해요. 일정 확인을 원하시면 #prd_parking 채널을 확인해 주세요.
                     </div>
                     <div class="card-output">
                         <div class="card-output-label">산출물</div>
                         <div class="card-output-value">💬 슬랙 #prd_parking 채널 공지 / 📅 Jira 티켓에 일정 수정</div>
                     </div>
-                    <div class="comm-badge">📅 협의 장치: 배포 일정 계획 (격주 월)</div>
-                    <ul class="card-notes">
-                        <li>휴일 전날은 배포 안됨</li>
-                    </ul>
+                    <div class="comm-badge">📅 협의 장치: 배포 일정 계획 (격주 월요일)</div>
+                    <div class="card-notes">
+                        <div class="card-notes-label">💡 참고해 주세요</div>
+                        <ul>
+                            <li>휴일 전날에는 배포가 진행되지 않아요. 안정적인 서비스 운영을 위한 정책이에요</li>
+                        </ul>
+                    </div>
+                    <div class="card-actions">
+                        <button class="like-btn" onclick="toggleLike(this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                            <span>도움이 됐어요</span>
+                        </button>
+                    </div>
                 </div>
 
-                <div class="process-card" style="border-color: var(--step-develop)">
+                <div class="process-card" style="border-color: var(--step-develop)" data-search="개발 FE BE QA CR 티켓">
                     <div class="card-header">
                         <div class="card-title">개발</div>
                         <div class="card-owner">
@@ -877,23 +1449,29 @@
                         </div>
                     </div>
                     <div class="card-description">
-                        제품 변경사항을 개발합니다 (FE, BE).
+                        프론트엔드(FE)와 백엔드(BE) 개발자분들이 요청하신 기능을 구현해요.
                     </div>
                     <div class="card-output">
                         <div class="card-output-label">산출물</div>
                         <div class="card-output-value">🎫 QA, CR 티켓 생성 (automation)</div>
+                    </div>
+                    <div class="card-actions">
+                        <button class="like-btn" onclick="toggleLike(this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                            <span>도움이 됐어요</span>
+                        </button>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- 5. 테스트 -->
-        <section id="test" class="process-section">
+        <section id="test" class="process-section" data-search="테스트 QA 개발환경 배포 데모">
             <div class="section-header">
                 <div class="section-number" style="background: var(--step-test)">5</div>
                 <div class="section-title">
                     <h2>테스트</h2>
-                    <p>개발된 기능을 검증합니다</p>
+                    <p>개발된 기능이 잘 작동하는지 꼼꼼히 검증하는 단계예요</p>
                 </div>
                 <div class="jira-badges">
                     <span class="jira-badge prq">PRQ: 완료</span>
@@ -902,7 +1480,7 @@
             </div>
 
             <div class="process-cards">
-                <div class="process-card" style="border-color: var(--step-test)">
+                <div class="process-card" style="border-color: var(--step-test)" data-search="개발환경 배포">
                     <div class="card-header">
                         <div class="card-title">개발환경 배포</div>
                         <div class="card-owner">
@@ -911,11 +1489,17 @@
                         </div>
                     </div>
                     <div class="card-description">
-                        개발 환경에서 배포하고 요청자에게 공유합니다.
+                        개발 환경에 먼저 배포하고, 요청자분께 테스트 가능하다고 안내드려요.
+                    </div>
+                    <div class="card-actions">
+                        <button class="like-btn" onclick="toggleLike(this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                            <span>도움이 됐어요</span>
+                        </button>
                     </div>
                 </div>
 
-                <div class="process-card" style="border-color: var(--step-test)">
+                <div class="process-card" style="border-color: var(--step-test)" data-search="개발환경 테스트 QA 요청자">
                     <div class="card-header">
                         <div class="card-title">개발환경 테스트</div>
                         <div class="card-owner">
@@ -924,11 +1508,17 @@
                         </div>
                     </div>
                     <div class="card-description">
-                        개발환경에서 테스트합니다.
+                        개발 환경에서 기능이 올바르게 작동하는지 테스트해요. 요청자분도 함께 확인해 주시면 좋아요!
+                    </div>
+                    <div class="card-actions">
+                        <button class="like-btn" onclick="toggleLike(this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                            <span>도움이 됐어요</span>
+                        </button>
                     </div>
                 </div>
 
-                <div class="process-card" style="border-color: var(--step-test)">
+                <div class="process-card" style="border-color: var(--step-test)" data-search="스프린트 데모 녹화 영상 피드백">
                     <div class="card-header">
                         <div class="card-title">스프린트 데모</div>
                         <div class="card-owner">
@@ -937,27 +1527,36 @@
                         </div>
                     </div>
                     <div class="card-description">
-                        제품 변경사항을 리뷰합니다 (데모).
+                        개발된 내용을 데모 형태로 보여드리고, 요청자분의 피드백을 받아요.
                     </div>
                     <div class="card-output">
                         <div class="card-output-label">산출물</div>
-                        <div class="card-output-value">🎬 데모(미팅) 녹화 영상, 피드백</div>
+                        <div class="card-output-value">🎬 데모 미팅 녹화 영상, 피드백</div>
                     </div>
-                    <div class="comm-badge">📅 협의 장치: 스프린트 데모 (격주 수)</div>
-                    <ul class="card-notes">
-                        <li>추가 개선이 필요한경우 추가 백로그 티켓을 발행한다 (배포전 수정이 가능한경우 반영하여 배포한다)</li>
-                    </ul>
+                    <div class="comm-badge">📅 협의 장치: 스프린트 데모 (격주 수요일)</div>
+                    <div class="card-notes">
+                        <div class="card-notes-label">💡 참고해 주세요</div>
+                        <ul>
+                            <li>추가 개선이 필요하면 새로운 백로그 티켓으로 등록해요. 배포 전 수정 가능한 경우 바로 반영해 드려요</li>
+                        </ul>
+                    </div>
+                    <div class="card-actions">
+                        <button class="like-btn" onclick="toggleLike(this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                            <span>도움이 됐어요</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </section>
 
         <!-- 6. 배포 -->
-        <section id="deploy" class="process-section">
+        <section id="deploy" class="process-section" data-search="배포 운영환경 모니터링">
             <div class="section-header">
                 <div class="section-number" style="background: var(--step-deploy)">6</div>
                 <div class="section-title">
                     <h2>배포</h2>
-                    <p>운영 환경에 배포합니다</p>
+                    <p>드디어 실제 서비스에 반영되는 단계예요. 곧 사용하실 수 있어요!</p>
                 </div>
                 <div class="jira-badges">
                     <span class="jira-badge prq">PRQ: 완료</span>
@@ -966,7 +1565,7 @@
             </div>
 
             <div class="process-cards">
-                <div class="process-card" style="border-color: var(--step-deploy)">
+                <div class="process-card" style="border-color: var(--step-deploy)" data-search="운영환경 배포">
                     <div class="card-header">
                         <div class="card-title">운영환경 배포</div>
                         <div class="card-owner">
@@ -975,11 +1574,17 @@
                         </div>
                     </div>
                     <div class="card-description">
-                        서비스 운영 환경에 배포합니다.
+                        개발이 완료된 기능을 실제 서비스 운영 환경에 배포해요.
+                    </div>
+                    <div class="card-actions">
+                        <button class="like-btn" onclick="toggleLike(this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                            <span>도움이 됐어요</span>
+                        </button>
                     </div>
                 </div>
 
-                <div class="process-card" style="border-color: var(--step-deploy)">
+                <div class="process-card" style="border-color: var(--step-deploy)" data-search="배포 후 모니터링 버그 장애">
                     <div class="card-header">
                         <div class="card-title">배포 후 모니터링</div>
                         <div class="card-owner">
@@ -988,23 +1593,32 @@
                         </div>
                     </div>
                     <div class="card-description">
-                        서비스 운영 환경에서 모니터링합니다.
+                        배포 후 서비스가 정상적으로 작동하는지 모니터링해요. 문제가 있으면 빠르게 대응해요.
                     </div>
-                    <ul class="card-notes">
-                        <li>버그, 장애 발생시 즉시 제보하여 처리한다</li>
-                        <li>추가 개선사항은 백로그로 등록한다</li>
-                    </ul>
+                    <div class="card-notes">
+                        <div class="card-notes-label">💡 참고해 주세요</div>
+                        <ul>
+                            <li>버그나 장애를 발견하시면 바로 알려주세요. 빠르게 처리해 드릴게요!</li>
+                            <li>추가로 개선이 필요한 사항은 새로운 백로그로 등록해 주세요</li>
+                        </ul>
+                    </div>
+                    <div class="card-actions">
+                        <button class="like-btn" onclick="toggleLike(this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                            <span>도움이 됐어요</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </section>
 
         <!-- 7. 완료 -->
-        <section id="done" class="process-section">
+        <section id="done" class="process-section" data-search="완료 종결 모니터링">
             <div class="section-header">
                 <div class="section-number" style="background: var(--step-done)">7</div>
                 <div class="section-title">
                     <h2>완료</h2>
-                    <p>모니터링을 종료하고 티켓을 마감합니다</p>
+                    <p>모든 과정이 마무리되었어요. 요청해 주셔서 감사합니다!</p>
                 </div>
                 <div class="jira-badges">
                     <span class="jira-badge prq">PRQ: 완료</span>
@@ -1013,7 +1627,7 @@
             </div>
 
             <div class="process-cards">
-                <div class="process-card" style="border-color: var(--step-done)">
+                <div class="process-card" style="border-color: var(--step-done)" data-search="종결">
                     <div class="card-header">
                         <div class="card-title">종결</div>
                         <div class="card-owner">
@@ -1022,30 +1636,287 @@
                         </div>
                     </div>
                     <div class="card-description">
-                        모니터링을 종료합니다.
+                        모니터링이 완료되면 티켓을 마감해요. 요청하신 기능이 성공적으로 서비스에 반영되었습니다!
+                    </div>
+                    <div class="card-actions">
+                        <button class="like-btn" onclick="toggleLike(this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                            <span>도움이 됐어요</span>
+                        </button>
                     </div>
                 </div>
             </div>
         </section>
-
-        <!-- Tips -->
-        <div class="tips-box">
-            <h3>📌 알아두면 좋은 정보</h3>
-            <ul>
-                <li><strong>서스테이닝</strong>: 1 Sprint(2주) 이내 개발 가능한 단순 변경 건</li>
-                <li><strong>프로젝트</strong>: 2주 초과 개발 건, 별도 프로젝트 제안서 필요</li>
-                <li><strong>휴일 전날</strong>: 배포 불가</li>
-                <li><strong>긴급 건(Urgency)</strong>: 위클리에서 합의된 건만 가능</li>
-                <li><strong>본부당 A등급</strong>: SUS 백로그 최대 3개</li>
-            </ul>
-        </div>
     </main>
 
+    <!-- Floating Tips Button - NEW -->
+    <div class="floating-tips">
+        <div class="tips-popup" id="tipsPopup">
+            <div class="tips-popup-header">
+                <h4>📌 알아두시면 좋아요!</h4>
+                <button class="tips-popup-close" onclick="toggleTips()">&times;</button>
+            </div>
+            <div class="tips-popup-body">
+                <ul>
+                    <li><strong>서스테이닝이란?</strong> 2주(1 Sprint) 이내에 개발 가능한 단순 변경 건이에요</li>
+                    <li><strong>프로젝트란?</strong> 2주를 초과하는 개발 건으로, 별도 제안서가 필요해요</li>
+                    <li><strong>휴일 전날</strong> 안정적인 운영을 위해 배포가 진행되지 않아요</li>
+                    <li><strong>긴급 건(Urgency)</strong> 위클리 회의에서 합의된 경우에만 사용해 주세요</li>
+                    <li><strong>A등급 백로그</strong> 본부당 최대 3개까지 지정하실 수 있어요</li>
+                </ul>
+            </div>
+        </div>
+        <button class="tips-toggle" onclick="toggleTips()">💡</button>
+    </div>
+
+    <!-- Modal for Step Details - NEW -->
+    <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+        <div class="modal" onclick="event.stopPropagation()">
+            <div class="modal-header" id="modalHeader">
+                <div class="modal-step-circle" id="modalCircle">1</div>
+                <div class="modal-title">
+                    <h3 id="modalTitle">등록</h3>
+                    <p id="modalSubtitle">개발 요청을 PRQ 티켓으로 등록합니다</p>
+                </div>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-summary">
+                    <h4>이 단계에서 진행되는 일이에요</h4>
+                    <ul id="modalSummary">
+                        <li>PRQ 티켓 생성</li>
+                        <li>소속부서장 승인</li>
+                        <li>우선순위 설정</li>
+                    </ul>
+                </div>
+                <button class="modal-go-btn" id="modalGoBtn">자세한 내용 보기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enhanced Footer - NEW -->
     <footer class="footer">
-        <p>서스테이닝 개발 프로세스 가이드 | 제품 그룹</p>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>빠른 링크</h4>
+                <ul>
+                    <li><a href="#register">1. 등록</a></li>
+                    <li><a href="#review">2. 검토</a></li>
+                    <li><a href="#plan">3. 기획</a></li>
+                    <li><a href="#develop">4. 개발</a></li>
+                    <li><a href="#test">5. 테스트</a></li>
+                    <li><a href="#deploy">6. 배포</a></li>
+                    <li><a href="#done">7. 완료</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>자주 묻는 질문 (FAQ)</h4>
+                <ul>
+                    <li><a href="#register">개발 요청은 어떻게 하면 되나요?</a></li>
+                    <li><a href="#review">서스테이닝과 프로젝트는 어떻게 다른가요?</a></li>
+                    <li><a href="#plan">PRD는 누가 작성하나요?</a></li>
+                    <li><a href="#deploy">배포 일정은 어떻게 정해지나요?</a></li>
+                </ul>
+            </div>
+            <div class="footer-section footer-contact">
+                <h4>궁금한 점이 있으신가요?</h4>
+                <p>프로세스 관련 문의는 언제든 편하게 연락 주세요!</p>
+                <p>Slack: <a href="#">#prd_parking</a></p>
+                <p>담당: 제품 그룹</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>서스테이닝 개발 프로세스 가이드 | 제품 그룹 | 2026</p>
+        </div>
     </footer>
 
     <script>
+        // Step data for modal
+        const stepData = {
+            register: {
+                number: '1',
+                title: '등록',
+                subtitle: '개발이 필요한 내용을 PRQ 티켓으로 등록하는 첫 번째 단계예요',
+                color: 'var(--step-register)',
+                summary: ['PRQ 티켓 생성', '소속부서장 승인', '본부별 우선순위 설정']
+            },
+            review: {
+                number: '2',
+                title: '검토',
+                subtitle: '요청하신 건을 꼼꼼히 검토하고, 개발 진행 여부를 결정해요',
+                color: 'var(--step-review)',
+                summary: ['티켓 규모 분류', '개발 리소스 확인', '백로그 그루밍', '담당 PM 배정']
+            },
+            plan: {
+                number: '3',
+                title: '기획',
+                subtitle: '구체적인 요구사항을 정리하고, 개발 준비를 마무리해요',
+                color: 'var(--step-plan)',
+                summary: ['PRD 작성', '1차/2차 리뷰', '스프린트 플래닝', '개발 담당자 배정', '개발 착수 공지']
+            },
+            develop: {
+                number: '4',
+                title: '개발',
+                subtitle: '실제 코드 개발이 진행돼요. 요청하신 기능이 만들어지고 있어요!',
+                color: 'var(--step-develop)',
+                summary: ['제품 기획 확정', '배포 일정 공지', '코드 개발 (FE/BE)']
+            },
+            test: {
+                number: '5',
+                title: '테스트',
+                subtitle: '개발된 기능이 잘 작동하는지 꼼꼼히 검증해요',
+                color: 'var(--step-test)',
+                summary: ['개발환경 배포', '개발환경 테스트', '스프린트 데모']
+            },
+            deploy: {
+                number: '6',
+                title: '배포',
+                subtitle: '드디어 실제 서비스에 반영돼요. 곧 사용하실 수 있어요!',
+                color: 'var(--step-deploy)',
+                summary: ['운영환경 배포', '배포 후 모니터링']
+            },
+            done: {
+                number: '7',
+                title: '완료',
+                subtitle: '모든 과정이 마무리되었어요. 요청해 주셔서 감사합니다!',
+                color: 'var(--step-done)',
+                summary: ['모니터링 종료', '티켓 마감']
+            }
+        };
+
+        // Modal functions
+        function openModal(step) {
+            const data = stepData[step];
+            document.getElementById('modalCircle').textContent = data.number;
+            document.getElementById('modalCircle').style.background = data.color;
+            document.getElementById('modalTitle').textContent = data.title;
+            document.getElementById('modalSubtitle').textContent = data.subtitle;
+            document.getElementById('modalSummary').innerHTML = data.summary.map(s => `<li>${s}</li>`).join('');
+            document.getElementById('modalGoBtn').onclick = () => {
+                closeModal();
+                document.getElementById(step).scrollIntoView({ behavior: 'smooth' });
+            };
+            document.getElementById('modalOverlay').classList.add('active');
+        }
+
+        function closeModal(event) {
+            if (!event || event.target === document.getElementById('modalOverlay')) {
+                document.getElementById('modalOverlay').classList.remove('active');
+            }
+        }
+
+        // Tips toggle
+        function toggleTips() {
+            document.getElementById('tipsPopup').classList.toggle('active');
+        }
+
+        // Like button toggle
+        function toggleLike(btn) {
+            btn.classList.toggle('liked');
+            const span = btn.querySelector('span');
+            if (btn.classList.contains('liked')) {
+                span.textContent = '피드백 감사해요!';
+                btn.querySelector('svg').setAttribute('fill', 'currentColor');
+            } else {
+                span.textContent = '도움이 됐어요';
+                btn.querySelector('svg').setAttribute('fill', 'none');
+            }
+        }
+
+        // Search functionality
+        const searchInput = document.getElementById('searchInput');
+        const searchResults = document.getElementById('searchResults');
+        const processCards = document.querySelectorAll('.process-card');
+        const processSections = document.querySelectorAll('.process-section');
+
+        const stepColors = {
+            register: 'var(--step-register)',
+            review: 'var(--step-review)',
+            plan: 'var(--step-plan)',
+            develop: 'var(--step-develop)',
+            test: 'var(--step-test)',
+            deploy: 'var(--step-deploy)',
+            done: 'var(--step-done)'
+        };
+
+        const stepNames = {
+            register: '등록',
+            review: '검토',
+            plan: '기획',
+            develop: '개발',
+            test: '테스트',
+            deploy: '배포',
+            done: '완료'
+        };
+
+        searchInput.addEventListener('input', function() {
+            const query = this.value.toLowerCase().trim();
+
+            if (query.length < 2) {
+                searchResults.classList.remove('active');
+                processCards.forEach(card => card.classList.remove('hidden'));
+                processSections.forEach(section => section.classList.remove('hidden'));
+                return;
+            }
+
+            const results = [];
+            processCards.forEach(card => {
+                const searchText = (card.dataset.search + ' ' + card.textContent).toLowerCase();
+                const section = card.closest('.process-section');
+                const stepId = section.id;
+
+                if (searchText.includes(query)) {
+                    const title = card.querySelector('.card-title').textContent;
+                    results.push({
+                        title: title,
+                        step: stepId,
+                        element: card
+                    });
+                }
+            });
+
+            if (results.length > 0) {
+                searchResults.innerHTML = results.slice(0, 8).map(r => `
+                    <div class="search-result-item" onclick="goToCard('${r.step}', '${r.title}')">
+                        <span class="search-result-step" style="background: ${stepColors[r.step]}">${stepNames[r.step]}</span>
+                        <span class="search-result-title">${r.title}</span>
+                    </div>
+                `).join('');
+                searchResults.classList.add('active');
+            } else {
+                searchResults.innerHTML = '<div class="search-result-item"><span>검색 결과가 없어요. 다른 키워드로 검색해 보세요!</span></div>';
+                searchResults.classList.add('active');
+            }
+        });
+
+        function goToCard(stepId, title) {
+            searchResults.classList.remove('active');
+            searchInput.value = '';
+
+            const section = document.getElementById(stepId);
+            section.scrollIntoView({ behavior: 'smooth' });
+
+            // Highlight the card briefly
+            setTimeout(() => {
+                const cards = section.querySelectorAll('.process-card');
+                cards.forEach(card => {
+                    if (card.querySelector('.card-title').textContent === title) {
+                        card.style.boxShadow = '0 0 0 3px var(--primary)';
+                        setTimeout(() => {
+                            card.style.boxShadow = '';
+                        }, 2000);
+                    }
+                });
+            }, 500);
+        }
+
+        // Close search results when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+                searchResults.classList.remove('active');
+            }
+        });
+
         // Smooth scroll for navigation
         document.querySelectorAll('.nav-item').forEach(item => {
             item.addEventListener('click', function(e) {
@@ -1058,11 +1929,19 @@
             });
         });
 
-        // Highlight active nav item on scroll
+        // Highlight active nav item on scroll + Progress bar
         const sections = document.querySelectorAll('.process-section');
         const navItems = document.querySelectorAll('.nav-item');
+        const progressBar = document.getElementById('progressBar');
 
         window.addEventListener('scroll', () => {
+            // Progress bar
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = (scrollTop / docHeight) * 100;
+            progressBar.style.width = progress + '%';
+
+            // Active nav
             let current = '';
             sections.forEach(section => {
                 const sectionTop = section.offsetTop;
@@ -1072,11 +1951,19 @@
             });
 
             navItems.forEach(item => {
-                item.style.transform = '';
+                item.classList.remove('active');
                 if (item.getAttribute('href') === `#${current}`) {
-                    item.style.transform = 'scale(1.05)';
+                    item.classList.add('active');
                 }
             });
+        });
+
+        // Close modal on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+                document.getElementById('tipsPopup').classList.remove('active');
+            }
         });
     </script>
 </body>
