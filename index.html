@@ -9,26 +9,46 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #7c3aed;
+            --primary: #8b5cf6;
             --primary-light: #a78bfa;
             --secondary: #94a3b8;
-            --success: #34d399;
+            --success: #4ade80;
             --warning: #fbbf24;
             --danger: #f87171;
             --bg: #0f172a;
             --card-bg: #1e293b;
+            --card-bg-hover: #273548;
             --text: #f1f5f9;
+            --text-muted: #cbd5e1;
             --text-light: #94a3b8;
             --border: #334155;
+            --border-light: #475569;
 
-            /* 우주 테마 단계별 색상 */
-            --step-register: #c084fc;
-            --step-review: #60a5fa;
-            --step-plan: #22d3ee;
-            --step-develop: #4ade80;
-            --step-test: #facc15;
-            --step-deploy: #fb923c;
-            --step-done: #94a3b8;
+            /* 우주 테마 단계별 색상 - 톤다운 */
+            --step-register: #a78bfa;
+            --step-review: #7dd3fc;
+            --step-plan: #5eead4;
+            --step-develop: #86efac;
+            --step-test: #fde047;
+            --step-deploy: #fdba74;
+            --step-done: #cbd5e1;
+
+            /* 타이포그래피 */
+            --font-xs: 0.75rem;
+            --font-sm: 0.875rem;
+            --font-base: 1rem;
+            --font-lg: 1.125rem;
+            --font-xl: 1.25rem;
+            --font-2xl: 1.5rem;
+            --font-3xl: 2rem;
+
+            /* 간격 */
+            --space-xs: 0.25rem;
+            --space-sm: 0.5rem;
+            --space-md: 1rem;
+            --space-lg: 1.5rem;
+            --space-xl: 2rem;
+            --space-2xl: 3rem;
         }
 
         * {
@@ -305,10 +325,48 @@
             min-width: 100px;
             cursor: pointer;
             transition: transform 0.2s;
+            position: relative;
         }
 
         .flow-step:hover {
             transform: scale(1.1);
+        }
+
+        .flow-step.active .flow-circle {
+            animation: pulseGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% {
+                box-shadow: 0 0 8px rgba(255,255,255,0.3);
+            }
+            50% {
+                box-shadow: 0 0 20px rgba(255,255,255,0.6), 0 0 40px currentColor;
+            }
+        }
+
+        .flow-step-number {
+            position: absolute;
+            top: -8px;
+            right: 15px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: var(--bg);
+            border: 2px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-xs);
+            font-weight: 700;
+            color: var(--text-muted);
+            z-index: 1;
+        }
+
+        .flow-step.active .flow-step-number {
+            background: var(--primary);
+            border-color: var(--primary-light);
+            color: white;
         }
 
         .flow-circle {
@@ -334,6 +392,11 @@
             font-size: 0.85rem;
             font-weight: 500;
             text-align: center;
+        }
+
+        .flow-step.active .flow-label {
+            color: var(--primary-light);
+            font-weight: 600;
         }
 
         .flow-arrow {
@@ -493,15 +556,16 @@
         }
 
         .section-number {
-            width: 50px;
-            height: 50px;
+            width: 56px;
+            height: 56px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
+            color: #0f172a;
             font-weight: 700;
-            font-size: 1.2rem;
+            font-size: var(--font-xl);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
 
         .section-title {
@@ -509,118 +573,163 @@
         }
 
         .section-title h2 {
-            font-size: 1.5rem;
-            font-weight: 600;
+            font-size: var(--font-2xl);
+            font-weight: 700;
+            letter-spacing: -0.02em;
         }
 
         .section-title p {
-            color: var(--text-light);
-            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-size: var(--font-sm);
+            margin-top: var(--space-xs);
         }
 
         .jira-badges {
             display: flex;
-            gap: 0.5rem;
+            gap: var(--space-sm);
+            flex-wrap: wrap;
         }
 
         .jira-badge {
-            padding: 0.3rem 0.8rem;
-            border-radius: 1rem;
-            font-size: 0.75rem;
-            font-weight: 500;
+            padding: 0.35rem 0.9rem;
+            border-radius: 2rem;
+            font-size: var(--font-xs);
+            font-weight: 600;
+            letter-spacing: 0.02em;
         }
 
         .jira-badge.prq {
-            background: #dbeafe;
-            color: #1d4ed8;
+            background: rgba(96, 165, 250, 0.15);
+            color: var(--step-review);
+            border: 1px solid rgba(96, 165, 250, 0.3);
         }
 
         .jira-badge.parking {
-            background: #fef3c7;
-            color: #92400e;
+            background: rgba(251, 191, 36, 0.15);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            color: var(--warning);
         }
 
-        /* Process Cards */
+        /* Process Cards - 개선된 계층 */
         .process-cards {
             display: grid;
-            gap: 1rem;
+            gap: var(--space-lg);
         }
 
         .process-card {
             background: var(--card-bg);
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            border-radius: 1rem;
+            padding: var(--space-xl);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
             border-left: 4px solid;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: all 0.3s ease;
             border-top: 1px solid var(--border);
             border-right: 1px solid var(--border);
             border-bottom: 1px solid var(--border);
         }
 
         .process-card:hover {
-            transform: translateX(4px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+            background: var(--card-bg-hover);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.3);
         }
 
         .card-header {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 1rem;
+            margin-bottom: var(--space-md);
+            gap: var(--space-md);
         }
 
         .card-title {
-            font-size: 1.1rem;
+            font-size: var(--font-lg);
             font-weight: 600;
             color: var(--text);
+            line-height: 1.4;
         }
 
         .card-owner {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            padding: 0.3rem 0.8rem;
-            background: var(--bg);
-            border-radius: 1rem;
-            font-size: 0.8rem;
-            color: var(--text-light);
+            gap: var(--space-sm);
+            padding: 0.4rem 0.9rem;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            border-radius: 2rem;
+            font-size: var(--font-xs);
+            color: var(--text-muted);
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .card-owner svg {
             width: 14px;
             height: 14px;
+            opacity: 0.7;
         }
 
         .card-description {
-            color: var(--text-light);
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-            line-height: 1.7;
+            color: var(--text-muted);
+            font-size: var(--font-base);
+            margin-bottom: var(--space-lg);
+            line-height: 1.8;
         }
 
         /* Enhanced Output Style - Space Theme */
         .card-output {
-            background: linear-gradient(135deg, rgba(52, 211, 153, 0.15) 0%, rgba(16, 185, 129, 0.1) 100%);
-            border-radius: 0.5rem;
-            padding: 0.75rem 1rem;
-            margin-bottom: 1rem;
-            border-left: 3px solid var(--success);
+            background: rgba(74, 222, 128, 0.08);
+            border-radius: 0.75rem;
+            padding: var(--space-md) var(--space-lg);
+            margin-bottom: var(--space-md);
+            border: 1px solid rgba(74, 222, 128, 0.2);
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+        }
+
+        .card-output-icon {
+            font-size: 1.5rem;
+        }
+
+        .card-output-content {
+            flex: 1;
         }
 
         .card-output-label {
-            font-size: 0.7rem;
+            font-size: var(--font-xs);
             color: var(--success);
-            margin-bottom: 0.25rem;
+            margin-bottom: var(--space-xs);
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.05em;
         }
 
         .card-output-value {
-            font-size: 0.9rem;
+            font-size: var(--font-sm);
             font-weight: 600;
             color: var(--success);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        /* Icon Consistency */
+        .card-output-value::first-letter,
+        .card-notes-label::first-letter {
+            font-size: 1em;
+        }
+
+        .icon-text {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+
+        .icon-text .emoji {
+            font-size: 1.1em;
+            line-height: 1;
+            flex-shrink: 0;
         }
 
         /* Enhanced Notes Style - Space Theme */
@@ -635,12 +744,15 @@
         }
 
         .card-notes-label {
-            font-size: 0.7rem;
+            font-size: var(--font-xs);
             color: var(--warning);
-            margin-bottom: 0.5rem;
+            margin-bottom: var(--space-sm);
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
         }
 
         .card-notes li {
@@ -713,22 +825,33 @@
         }
 
         .tips-toggle {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
+            height: 48px;
+            padding: 0 var(--space-lg) 0 var(--space-md);
+            border-radius: 24px;
             background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%);
             border: none;
             cursor: pointer;
             box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            transition: transform 0.2s, box-shadow 0.2s;
+            gap: var(--space-sm);
+            font-size: var(--font-sm);
+            font-weight: 600;
+            color: #1e293b;
+            transition: transform 0.2s, box-shadow 0.2s, padding 0.3s;
+        }
+
+        .tips-toggle .tip-icon {
+            font-size: 1.25rem;
+            line-height: 1;
+        }
+
+        .tips-toggle .tip-label {
+            white-space: nowrap;
         }
 
         .tips-toggle:hover {
-            transform: scale(1.1);
+            transform: scale(1.05);
             box-shadow: 0 6px 16px rgba(245, 158, 11, 0.5);
         }
 
@@ -883,19 +1006,28 @@
             transition: width 0.1s;
         }
 
-        /* Responsive */
+        /* Responsive - Tablet */
         @media (max-width: 768px) {
+            :root {
+                --font-3xl: 1.75rem;
+                --font-2xl: 1.25rem;
+                --space-xl: 1.5rem;
+                --space-2xl: 2rem;
+            }
+
             .header h1 {
-                font-size: 1.8rem;
+                font-size: var(--font-3xl);
             }
 
             .nav {
                 gap: 0.3rem;
+                flex-wrap: wrap;
+                justify-content: center;
             }
 
             .nav-item {
                 padding: 0.5rem 0.8rem;
-                font-size: 0.8rem;
+                font-size: var(--font-sm);
             }
 
             .container {
@@ -905,6 +1037,24 @@
             .flow-diagram {
                 flex-wrap: wrap;
                 justify-content: center;
+                gap: var(--space-md);
+            }
+
+            .flow-step {
+                min-width: 80px;
+            }
+
+            .flow-circle {
+                width: 50px;
+                height: 50px;
+                font-size: 0.75rem;
+            }
+
+            .flow-step-number {
+                width: 18px;
+                height: 18px;
+                font-size: 10px;
+                right: 10px;
             }
 
             .flow-arrow {
@@ -920,9 +1070,28 @@
                 margin-top: 0.5rem;
             }
 
+            .process-card {
+                padding: var(--space-lg);
+            }
+
+            .card-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--space-sm);
+            }
+
             .floating-tips {
                 bottom: 1rem;
                 right: 1rem;
+            }
+
+            .tips-toggle {
+                height: 44px;
+                padding: 0 var(--space-md);
+            }
+
+            .tips-toggle .tip-label {
+                display: none;
             }
 
             .tips-popup {
@@ -932,6 +1101,78 @@
 
             .footer-content {
                 grid-template-columns: 1fr;
+                gap: var(--space-xl);
+            }
+
+            .modal {
+                max-width: 95%;
+                margin: var(--space-md);
+            }
+        }
+
+        /* Responsive - Mobile */
+        @media (max-width: 480px) {
+            :root {
+                --font-3xl: 1.5rem;
+                --font-2xl: 1.125rem;
+                --space-xl: 1.25rem;
+            }
+
+            .header {
+                padding: var(--space-xl) var(--space-md);
+            }
+
+            .header h1 {
+                font-size: 1.4rem;
+            }
+
+            .header p {
+                font-size: var(--font-sm);
+            }
+
+            .parking-badge {
+                font-size: 0.65rem;
+                padding: 0.3rem 0.6rem;
+            }
+
+            .nav-item {
+                padding: 0.4rem 0.6rem;
+                font-size: 0.75rem;
+            }
+
+            .section-title {
+                font-size: var(--font-xl);
+            }
+
+            .flow-step {
+                min-width: 65px;
+            }
+
+            .flow-circle {
+                width: 44px;
+                height: 44px;
+                font-size: 0.7rem;
+            }
+
+            .flow-label {
+                font-size: 0.75rem;
+            }
+
+            .card-title {
+                font-size: var(--font-base);
+            }
+
+            .search-container {
+                padding: 0 var(--space-sm);
+            }
+
+            .search-input {
+                font-size: var(--font-sm);
+            }
+
+            .tips-popup {
+                width: calc(100vw - 2rem);
+                right: -0.5rem;
             }
         }
 
@@ -995,37 +1236,44 @@
         <section class="overview">
             <h2>📋 전체 프로세스 흐름 <span style="font-size: 0.8rem; color: var(--text-light); font-weight: 400;">(각 단계를 클릭하시면 자세한 내용을 확인하실 수 있어요)</span></h2>
             <div class="flow-diagram">
-                <div class="flow-step" onclick="openModal('register')">
+                <div class="flow-step" data-step="register" onclick="openModal('register')">
+                    <span class="flow-step-number">1</span>
                     <div class="flow-circle" style="background: var(--step-register)">등록</div>
                     <div class="flow-label">PRQ 티켓<br>생성</div>
                 </div>
                 <div class="flow-arrow">→</div>
-                <div class="flow-step" onclick="openModal('review')">
+                <div class="flow-step" data-step="review" onclick="openModal('review')">
+                    <span class="flow-step-number">2</span>
                     <div class="flow-circle" style="background: var(--step-review)">검토</div>
                     <div class="flow-label">백로그<br>검토</div>
                 </div>
                 <div class="flow-arrow">→</div>
-                <div class="flow-step" onclick="openModal('plan')">
+                <div class="flow-step" data-step="plan" onclick="openModal('plan')">
+                    <span class="flow-step-number">3</span>
                     <div class="flow-circle" style="background: var(--step-plan)">기획</div>
                     <div class="flow-label">PRD 작성<br>리뷰</div>
                 </div>
                 <div class="flow-arrow">→</div>
-                <div class="flow-step" onclick="openModal('develop')">
+                <div class="flow-step" data-step="develop" onclick="openModal('develop')">
+                    <span class="flow-step-number">4</span>
                     <div class="flow-circle" style="background: var(--step-develop)">개발</div>
                     <div class="flow-label">코드<br>개발</div>
                 </div>
                 <div class="flow-arrow">→</div>
-                <div class="flow-step" onclick="openModal('test')">
+                <div class="flow-step" data-step="test" onclick="openModal('test')">
+                    <span class="flow-step-number">5</span>
                     <div class="flow-circle" style="background: var(--step-test)">테스트</div>
                     <div class="flow-label">QA<br>검증</div>
                 </div>
                 <div class="flow-arrow">→</div>
-                <div class="flow-step" onclick="openModal('deploy')">
+                <div class="flow-step" data-step="deploy" onclick="openModal('deploy')">
+                    <span class="flow-step-number">6</span>
                     <div class="flow-circle" style="background: var(--step-deploy)">배포</div>
                     <div class="flow-label">운영환경<br>배포</div>
                 </div>
                 <div class="flow-arrow">→</div>
-                <div class="flow-step" onclick="openModal('done')">
+                <div class="flow-step" data-step="done" onclick="openModal('done')">
+                    <span class="flow-step-number">7</span>
                     <div class="flow-circle" style="background: var(--step-done)">완료</div>
                     <div class="flow-label">모니터링<br>종결</div>
                 </div>
@@ -1747,7 +1995,10 @@
                 </ul>
             </div>
         </div>
-        <button class="tips-toggle" onclick="toggleTips()">💡</button>
+        <button class="tips-toggle" onclick="toggleTips()">
+            <span class="tip-icon">💡</span>
+            <span class="tip-label">도움말</span>
+        </button>
     </div>
 
     <!-- Modal for Step Details - NEW -->
@@ -1878,12 +2129,20 @@
                 closeModal();
                 document.getElementById(step).scrollIntoView({ behavior: 'smooth' });
             };
+
+            // 활성 단계 표시
+            document.querySelectorAll('.flow-step').forEach(el => el.classList.remove('active'));
+            const activeStep = document.querySelector(`.flow-step[data-step="${step}"]`);
+            if (activeStep) activeStep.classList.add('active');
+
             document.getElementById('modalOverlay').classList.add('active');
         }
 
         function closeModal(event) {
             if (!event || event.target === document.getElementById('modalOverlay')) {
                 document.getElementById('modalOverlay').classList.remove('active');
+                // 활성 표시 제거
+                document.querySelectorAll('.flow-step').forEach(el => el.classList.remove('active'));
             }
         }
 
